@@ -173,8 +173,9 @@ ul { list-style: none; padding: 0; margin: 0; }
 .dropdown-toggle .caret { margin-left: 4px; }
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: 100%;
   left: 0;
+  margin-top: 8px;
   min-width: 220px;
   background: #0d0d0d;
   border: 1px solid var(--border);
@@ -182,6 +183,16 @@ ul { list-style: none; padding: 0; margin: 0; }
   padding: 8px;
   display: none;
   box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+/* Invisible bridge so the cursor can travel from the toggle to the menu
+   without crossing a gap and triggering mouseleave. */
+.dropdown-menu::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -10px;
+  height: 10px;
 }
 .dropdown-menu a {
   display: block;
@@ -560,6 +571,129 @@ ul { list-style: none; padding: 0; margin: 0; }
   font-weight: 700;
 }
 .car-rating small { color: var(--muted); font-weight: 400; }
+
+/* -------- Dancer catalog -------- */
+.dancer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.dancer-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.dancer-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: 0 24px 50px rgba(0,0,0,0.55);
+}
+.dancer-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+.dancer-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+.dancer-card:hover .dancer-photo img { transform: scale(1.04); }
+.dancer-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--green), var(--green-2));
+  color: #0a0a0a;
+  font-size: 11px;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.dancer-body {
+  padding: 22px 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+.dancer-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dancer-name {
+  margin: 0;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 28px;
+  line-height: 1;
+}
+.dancer-rate {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--green);
+}
+.dancer-tag {
+  margin: 0;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 14px;
+}
+.dancer-offers {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0 6px;
+}
+.dancer-offers li {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  padding-left: 18px;
+  position: relative;
+}
+.dancer-offers li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+}
+.dancer-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+  flex: 1;
+}
+.dancer-book {
+  align-self: flex-start;
+  margin-top: 8px;
+}
+
+@media (max-width: 960px) {
+  .dancer-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; }
+}
+@media (max-width: 560px) {
+  .dancer-grid { grid-template-columns: 1fr; }
+}
 
 /* -------- Footer -------- */
 .footer {
