@@ -561,7 +561,6 @@ ul { list-style: none; padding: 0; margin: 0; }
   background: rgba(255,255,255,0.18);
   border-radius: 2px;
 }
-.car-dots span:first-child { background: #fff; }
 .car-handle { font-size: 18px; margin: 4px 0 10px; }
 .car-rating {
   display: inline-flex; align-items: center; gap: 6px;
@@ -776,6 +775,11 @@ ul { list-style: none; padding: 0; margin: 0; }
   font-size: 13px;
 }
 .socials a:hover { background: #fff; color: #000; }
+.socials svg {
+  width: 17px;
+  height: 17px;
+  display: block;
+}
 
 /* -------- Responsive -------- */
 @media (max-width: 960px) {
@@ -817,20 +821,41 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 /* Mobile menu active state */
-.global-nav.menu-open .nav-left,
-.global-nav.menu-open .nav-right {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  position: absolute;
-  top: var(--nav-h);
-  left: 0; right: 0;
-  padding: 20px 24px;
-  background: #0a0a0a;
-  border-bottom: 1px solid var(--border);
-  z-index: 50;
+.mobile-menu { display: none; }
+
+@media (max-width: 960px) {
+  .global-nav.menu-open .mobile-menu {
+    position: absolute;
+    top: var(--nav-h);
+    left: 0;
+    right: 0;
+    display: grid;
+    gap: 14px;
+    padding: 20px 24px;
+    background: #0a0a0a;
+    border-bottom: 1px solid var(--border);
+    z-index: 50;
+  }
+  .global-nav.menu-open .mobile-menu .nav-left,
+  .global-nav.menu-open .mobile-menu .nav-right {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .mobile-menu .nav-item.has-dropdown,
+  .mobile-menu .dropdown-toggle {
+    width: 100%;
+    text-align: left;
+  }
+  .mobile-menu .dropdown-menu {
+    position: static;
+    width: 100%;
+    margin-top: 8px;
+    box-shadow: none;
+  }
+  .mobile-menu .dropdown-menu::before { display: none; }
 }
-.global-nav.menu-open .nav-right { top: auto; }
 
 /* ========================================================================
    v1.1 additions — page hero, feature grid, pricing, forms, FAQ, map,
@@ -1069,6 +1094,17 @@ ul { list-style: none; padding: 0; margin: 0; }
   border: 1px solid rgba(184,255,77,0.4);
   border-radius: 10px;
   color: var(--green);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.04em;
+}
+.form-error {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  background: rgba(255,85,119,0.1);
+  border: 1px solid rgba(255,85,119,0.45);
+  border-radius: 10px;
+  color: #ff8aa0;
   font-weight: 700;
   font-style: italic;
   letter-spacing: 0.04em;
@@ -1492,4 +1528,3 @@ select:focus-visible,
   .map-search { flex-direction: column; }
   .map-search .btn { width: 100%; }
 }
-

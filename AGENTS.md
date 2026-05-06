@@ -103,6 +103,10 @@ xotic-v1/
 - [x] Required fields, email + phone format checks, invalid-state styling,
       success message, fields reset on success
 - [x] Visible "this isn't connected to a backend yet" notice on every form
+- [x] Formspree-ready hidden metadata added to all 5 forms (`_subject`,
+      `_form_source`, `_gotcha`)
+- [x] `js/main.js` can submit validated forms via `fetch()` once real
+      Formspree endpoint IDs are added to `FORMSPREE_ENDPOINTS`
 
 ### Pricing
 - [x] Three owner-focused tiers: Starter $99/mo, Growth $249/mo (featured),
@@ -137,6 +141,10 @@ xotic-v1/
 - [x] `aria-expanded`, `aria-haspopup`, `role="menu"` on dropdown
 - [x] Visible focus states on every interactive element
 - [x] Required `alt` text on images, `aria-label` on icon buttons
+- [x] Footer social placeholders replaced with inline SVG logos
+- [x] Mobile navigation rebuilt into a single generated drawer so primary,
+      secondary, and dropdown links do not overlap
+- [x] Carousel dot styling now highlights only the active dot
 
 ### Docs
 - [x] `ASSETS.md` documenting every external image and a per-page
@@ -156,13 +164,14 @@ These can be implemented immediately by an AI/human developer in the repo.
 - [ ] **Browser QA pass** — open every page at desktop / tablet / mobile
       breakpoints, click every link, submit every form, exercise the
       carousel + dropdown + map, fix anything visibly broken.
-      *(This is the next planned activity — see `NEXT_PROMPT.md`.)*
+      *(Static checks were run on 2026-05-06; full manual/browser QA is
+      still needed because headless Chrome was blocked in this environment.)*
 - [ ] **Wire forms to a real backend** — Formspree, Netlify Forms, or a
-      custom endpoint. Until this is done, no submissions reach anyone.
+      custom endpoint. The frontend is Formspree-ready, but real Formspree
+      endpoint IDs still need to be created and added to `js/main.js`;
+      until then no submissions reach anyone.
 - [ ] **Add web analytics** — Google Analytics 4, Plausible, or Fathom
       snippet site-wide.
-- [ ] **Add real social-icon SVGs** in the footer (currently text glyphs
-      "YT / X / FB / IG / TT" — see [Issue: A.4](#issues)).
 - [ ] **Replace dancer roster placeholder photos** — same Unsplash image
       is repeated 6 times on `dancers.html`.
 - [ ] **Add hero / feature imagery** to `for-dancers.html`,
@@ -201,15 +210,9 @@ These need someone (June, Wes, or Peggy) to confirm or supply values.
 ### Issues
 <a id="issues"></a>
 
-1. **A.4** — The five footer social icons currently render as plain text
-   ("YT", "X", "FB", "IG", "TT") inside the existing styled circles. Looks
-   janky vs. the polish of the rest of the footer. Swap to inline SVG
-   logos before launch.
-2. The carousel indicator dots dim/bright transition relies on the
-   `is-active` class on the dot inside the *active* slide; verify this
-   visually in a browser since it depends on element ordering and isn't
-   covered by automated tests.
-3. The `feature-icon` Unicode glyphs render with mixed widths across OSes.
+1. Footer social icons now use inline SVG logos, but the links still point
+   to `#` until verified xxxotic social URLs are supplied.
+2. The `feature-icon` Unicode glyphs render with mixed widths across OSes.
    In a polish pass, replace with consistent inline SVGs.
 
 ---
@@ -255,6 +258,45 @@ These need someone (June, Wes, or Peggy) to confirm or supply values.
 - **Created** `assets/img/` directory.
 - **Created** `NEXT_PROMPT.md` for the upcoming Browser QA + form-backend
   activity.
+
+### 2026-05-06 — QA polish + Formspree-ready forms
+
+- **Updated** `css/styles.css`:
+  - Replaced footer social text treatment with SVG icon sizing.
+  - Added `.form-error` state styles.
+  - Reworked mobile menu CSS for a single generated drawer.
+  - Removed the always-active first carousel dot styling so only
+    `.is-active` is highlighted.
+- **Updated** `js/main.js`:
+  - Added `FORMSPREE_ENDPOINTS` config placeholders for all five forms.
+  - Added Formspree-compatible `fetch()` submission after client-side
+    validation when endpoints are configured.
+  - Improved form validation to catch non-empty optional email / phone
+    format issues, not just required fields.
+  - Generated a mobile nav drawer from the existing desktop nav so dropdown
+    expansion does not overlap secondary links.
+- **Updated** `for-dancers.html`, `for-club-owners.html`,
+  `for-patrons.html`, `signup.html`, and `brand-ambassador.html`:
+  - Added `_subject`, `_form_source`, and `_gotcha` fields.
+  - Added `.form-error` messages.
+  - Replaced backend-not-connected notices with privacy notes.
+- **Updated** every HTML footer:
+  - Replaced `YT / X / FB / IG / TT` text glyphs with inline SVG logos.
+- **Updated** `index.html`:
+  - Changed "HOW CLIENTS BOOK" to "HOW PATRONS BOOK".
+- **Updated** `ASSETS.md` and `NEXT_PROMPT.md`.
+- **Verified** via `http://localhost:3000` static checks:
+  - All 17 HTML pages returned HTTP 200.
+  - Local link targets resolved.
+  - All 5 forms include success, error, subject, source, and honeypot fields.
+  - All 17 footers include SVG social icons.
+  - Old backend warning copy and old social text glyphs are gone.
+- **Blocked**:
+  - Could not verify real Formspree POSTs because endpoint IDs were not
+    available.
+  - Could not complete automated headless-browser visual QA because Chrome
+    headless screenshot/CDP startup was blocked by local access restrictions;
+    manual browser QA is still required.
 
 ### 2026-05-05 — Earlier session
 

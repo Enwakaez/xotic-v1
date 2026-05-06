@@ -16,6 +16,7 @@ neutral, royalty-free placeholders.
 | index.html    | Phone mockups            | Pure CSS placeholders (no image)          | Local CSS only.                        |
 | download.html | App icons                | Inline SVG                                | Original brand glyphs.                 |
 | download.html | Google Play colors       | Inline SVG                                | Generic colored geometric SVG.         |
+| All pages     | Footer social icons      | Inline SVG                                | Placeholder account links pending.     |
 
 All other pages use color, type, and CSS-only visual elements — no
 external image dependencies.
@@ -71,7 +72,6 @@ variable on a hosted backend) to keep the key out of the client.
 
 ## Social icons
 
-Social icon buttons in the footer currently render text glyphs ("YT", "X",
-"FB", "IG", "TT") inside the existing styled circles. Replace with proper
-SVG logos before launch and link to verified xxxotic accounts. Until then
-they point to `#` and are labeled `(coming soon)`.
+Footer social buttons now use inline SVG logos for YouTube, X, Facebook,
+Instagram, and TikTok. The account URLs still need verified xxxotic social
+profiles; until then they point to `#` and are labeled `(coming soon)`.

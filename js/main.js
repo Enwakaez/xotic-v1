@@ -9,6 +9,13 @@
   /* -------- Store URL constants (replace before launch) -------- */
   var APP_STORE_URL = "download.html";   // TODO: replace with verified iOS URL
   var GOOGLE_PLAY_URL = "download.html"; // TODO: replace with verified Android URL
+  var FORMSPREE_ENDPOINTS = {
+    "dancer-apply": "",      // TODO: set to https://formspree.io/f/<id>
+    "owner-inquiry": "",     // TODO: set to https://formspree.io/f/<id>
+    "patron-waitlist": "",   // TODO: set to https://formspree.io/f/<id>
+    "signup": "",            // TODO: set to https://formspree.io/f/<id>
+    "ambassador": ""         // TODO: set to https://formspree.io/f/<id>
+  };
 
   // Apply real store URLs to any element marked with data-store
   if (APP_STORE_URL !== "download.html" || GOOGLE_PLAY_URL !== "download.html") {
@@ -35,10 +42,31 @@
   /* -------- Mobile nav toggle -------- */
   var nav = document.getElementById("globalNav");
   var navToggle = document.getElementById("navToggle");
+  var mobileMenu = null;
+  if (nav) {
+    var navLeft = nav.querySelector(".nav-inner > .nav-left");
+    var navRight = nav.querySelector(".nav-inner > .nav-right");
+    if (navLeft && navRight) {
+      mobileMenu = document.createElement("div");
+      mobileMenu.className = "mobile-menu";
+      mobileMenu.setAttribute("aria-label", "Mobile navigation");
+      mobileMenu.appendChild(navLeft.cloneNode(true));
+      mobileMenu.appendChild(navRight.cloneNode(true));
+      nav.appendChild(mobileMenu);
+    }
+  }
   if (navToggle && nav) {
     navToggle.addEventListener("click", function () {
       var open = nav.classList.toggle("menu-open");
       navToggle.setAttribute("aria-expanded", String(open));
+    });
+  }
+  if (mobileMenu && nav && navToggle) {
+    mobileMenu.addEventListener("click", function (e) {
+      var link = e.target.closest("a");
+      if (!link) return;
+      nav.classList.remove("menu-open");
+      navToggle.setAttribute("aria-expanded", "false");
     });
   }
 
@@ -263,34 +291,79 @@
     });
   }
 
-  /* -------- Static form validation + success message -------- */
+  /* -------- Static form validation + Formspree-ready submission -------- */
   document.querySelectorAll("form.static-form").forEach(function (form) {
+    var configuredEndpoint = FORMSPREE_ENDPOINTS[form.dataset.form || ""];
+    if (configuredEndpoint) {
+      form.setAttribute("action", configuredEndpoint);
+      form.setAttribute("method", "POST");
+    }
+
+    function fieldIsVisible(field) {
+      return field.type === "hidden" || field.offsetParent !== null;
+    }
+
+    function validateField(field) {
+      if (!fieldIsVisible(field) || field.name === "_gotcha") return true;
+      var value = (field.value || "").trim();
+      var valid = true;
+
+      if (field.required && value.length === 0) valid = false;
+      if (field.type === "email" && value.length > 0) {
+        valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      }
+      if (field.type === "tel" && value.length > 0) {
+        valid = /\d{7,}/.test(value.replace(/\D/g, ""));
+      }
+
+      field.classList.toggle("invalid", !valid);
+      return valid;
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var ok = true;
-      form.querySelectorAll("[required]").forEach(function (field) {
-        if (field.offsetParent === null) return; // skip hidden
-        var value = (field.value || "").trim();
-        var valid = value.length > 0;
-        if (field.type === "email" && valid) {
-          valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-        }
-        if (field.type === "tel" && valid) {
-          valid = /\d{7,}/.test(value.replace(/\D/g, ""));
-        }
-        field.classList.toggle("invalid", !valid);
-        if (!valid) ok = false;
+      form.querySelectorAll("input, textarea, select").forEach(function (field) {
+        if (!validateField(field)) ok = false;
       });
 
       var success = form.querySelector(".form-success");
-      if (ok) {
-        if (success) success.hidden = false;
-        form.querySelectorAll("input, textarea, select").forEach(function (field) {
-          if (field.type !== "hidden") field.value = "";
-        });
-      } else {
+      var error = form.querySelector(".form-error");
+      var submit = form.querySelector('[type="submit"]');
+      if (success) success.hidden = true;
+      if (error) error.hidden = true;
+
+      if (!ok) {
         if (success) success.hidden = true;
+        return;
       }
+
+      var action = form.getAttribute("action");
+      if (!action) {
+        if (error) {
+          error.textContent = "This form is ready for Formspree, but its endpoint is not configured yet.";
+          error.hidden = false;
+        }
+        return;
+      }
+
+      if (submit) submit.disabled = true;
+      window.fetch(action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { "Accept": "application/json" }
+      }).then(function (response) {
+        if (!response.ok) throw new Error("Form submission failed");
+        if (success) success.hidden = false;
+        form.reset();
+      }).catch(function () {
+        if (error) {
+          error.textContent = "Something went wrong. Please try again in a moment.";
+          error.hidden = false;
+        }
+      }).finally(function () {
+        if (submit) submit.disabled = false;
+      });
     });
 
     form.querySelectorAll("input, textarea, select").forEach(function (field) {
