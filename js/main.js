@@ -1,128 +1,326 @@
-// xxxotic — landing page interactions
+// xxxotic — site interactions
+//
+// Store destinations: when official App Store / Google Play URLs become
+// available, replace the values below with the verified URLs. Until then,
+// store buttons across the site route to the local download/waitlist page.
 (function () {
   "use strict";
 
-  // Current year in footer
-  const yearEl = document.getElementById("currentYear");
+  /* -------- Store URL constants (replace before launch) -------- */
+  var APP_STORE_URL = "download.html";   // TODO: replace with verified iOS URL
+  var GOOGLE_PLAY_URL = "download.html"; // TODO: replace with verified Android URL
+
+  // Apply real store URLs to any element marked with data-store
+  if (APP_STORE_URL !== "download.html" || GOOGLE_PLAY_URL !== "download.html") {
+    document.querySelectorAll('[data-store="ios"]').forEach(function (el) {
+      el.setAttribute("href", APP_STORE_URL);
+    });
+    document.querySelectorAll('[data-store="android"]').forEach(function (el) {
+      el.setAttribute("href", GOOGLE_PLAY_URL);
+    });
+  }
+
+  /* -------- Footer year -------- */
+  var yearEl = document.getElementById("currentYear");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Mobile nav toggle
-  const nav = document.getElementById("globalNav");
-  const navToggle = document.getElementById("navToggle");
+  /* -------- Active nav highlighting based on data-page / data-nav -------- */
+  var pageId = document.body.dataset.page;
+  if (pageId) {
+    document.querySelectorAll("[data-nav]").forEach(function (link) {
+      if (link.dataset.nav === pageId) link.classList.add("active");
+    });
+  }
+
+  /* -------- Mobile nav toggle -------- */
+  var nav = document.getElementById("globalNav");
+  var navToggle = document.getElementById("navToggle");
   if (navToggle && nav) {
-    navToggle.addEventListener("click", () => {
-      const open = nav.classList.toggle("menu-open");
+    navToggle.addEventListener("click", function () {
+      var open = nav.classList.toggle("menu-open");
       navToggle.setAttribute("aria-expanded", String(open));
     });
   }
 
-  // Features dropdown (click + hover)
-  document.querySelectorAll(".nav-item.has-dropdown").forEach((item) => {
-    const toggle = item.querySelector(".dropdown-toggle");
-    if (!toggle) return;
+  /* -------- Features dropdown (hover, click, keyboard) -------- */
+  document.querySelectorAll(".nav-item.has-dropdown").forEach(function (item) {
+    var toggle = item.querySelector(".dropdown-toggle");
+    var menu = item.querySelector(".dropdown-menu");
+    if (!toggle || !menu) return;
 
-    const close = () => {
+    var menuLinks = Array.prototype.slice.call(menu.querySelectorAll("a"));
+
+    function close() {
       item.classList.remove("open");
       toggle.setAttribute("aria-expanded", "false");
-    };
-    const open = () => {
+    }
+    function open() {
       item.classList.add("open");
       toggle.setAttribute("aria-expanded", "true");
-    };
+    }
+    function toggleOpen() {
+      if (item.classList.contains("open")) close();
+      else open();
+    }
 
-    toggle.addEventListener("click", (e) => {
+    toggle.addEventListener("click", function (e) {
       e.stopPropagation();
-      item.classList.contains("open") ? close() : open();
+      toggleOpen();
     });
+
+    toggle.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+        e.preventDefault();
+        open();
+        if (menuLinks.length) menuLinks[0].focus();
+      } else if (e.key === "Escape") {
+        close();
+      }
+    });
+
+    menuLinks.forEach(function (link, idx) {
+      link.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          var next = menuLinks[(idx + 1) % menuLinks.length];
+          if (next) next.focus();
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          var prev = menuLinks[(idx - 1 + menuLinks.length) % menuLinks.length];
+          if (prev) prev.focus();
+        } else if (e.key === "Escape") {
+          close();
+          toggle.focus();
+        }
+      });
+    });
+
     item.addEventListener("mouseenter", open);
     item.addEventListener("mouseleave", close);
-    document.addEventListener("click", (e) => {
+
+    document.addEventListener("click", function (e) {
       if (!item.contains(e.target)) close();
     });
   });
 
-  // Smooth-scroll for internal anchor links
-  document.querySelectorAll('a[href^="#"]').forEach((a) => {
-    a.addEventListener("click", (e) => {
-      const id = a.getAttribute("href");
+  /* -------- Smooth scroll for in-page anchors -------- */
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var id = a.getAttribute("href");
       if (!id || id === "#") return;
-      const target = document.querySelector(id);
+      var target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 
-  // Count-up animation for stat numbers (on scroll into view)
-  const stats = document.querySelectorAll(".stat-num");
-  const formatNum = (n, target) => {
+  /* -------- Stat count-up animation -------- */
+  var stats = document.querySelectorAll(".stat-num");
+  function formatNum(n, target) {
     if (target < 10 && !Number.isInteger(target)) return n.toFixed(1);
     return Math.round(n).toString();
-  };
-
-  const animateStat = (el) => {
+  }
+  function animateStat(el) {
     if (el.dataset.done === "1") return;
     el.dataset.done = "1";
-    const target = parseFloat(el.dataset.target || "0");
-    const suffix = el.dataset.suffix || "";
-    const duration = 1400;
-    const start = performance.now();
-
-    const tick = (now) => {
-      const p = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - p, 3);
-      const value = target * eased;
+    var target = parseFloat(el.dataset.target || "0");
+    var suffix = el.dataset.suffix || "";
+    var duration = 1400;
+    var start = performance.now();
+    function tick(now) {
+      var p = Math.min(1, (now - start) / duration);
+      var eased = 1 - Math.pow(1 - p, 3);
+      var value = target * eased;
       el.textContent = formatNum(value, target) + suffix;
       if (p < 1) requestAnimationFrame(tick);
       else el.textContent = (Number.isInteger(target) ? target : target.toFixed(1)) + suffix;
-    };
+    }
     requestAnimationFrame(tick);
-  };
-
-  if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+  }
+  if (stats.length) {
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             animateStat(entry.target);
             io.unobserve(entry.target);
           }
         });
-      },
-      { threshold: 0.35 }
-    );
-    stats.forEach((el) => io.observe(el));
-  } else {
-    stats.forEach(animateStat);
+      }, { threshold: 0.35 });
+      stats.forEach(function (el) { io.observe(el); });
+    } else {
+      stats.forEach(animateStat);
+    }
   }
 
-  // Testimonial carousel
-  const track = document.getElementById("carTrack");
+  /* -------- Carousel (auto-rotate, prev/next, dots, keyboard) -------- */
+  var track = document.getElementById("carTrack");
   if (track) {
-    const slides = Array.from(track.querySelectorAll(".car-slide"));
-    let index = 0;
-    const render = () => {
-      slides.forEach((s, i) => {
-        s.hidden = i !== index;
+    var slides = Array.prototype.slice.call(track.querySelectorAll(".car-slide"));
+    var index = 0;
+    var auto;
+
+    function render() {
+      slides.forEach(function (s, i) { s.hidden = i !== index; });
+      // sync indicator dots inside the active slide
+      slides.forEach(function (s, i) {
+        var dots = s.querySelectorAll(".car-dots span");
+        if (!dots.length) return;
+        dots.forEach(function (d, di) {
+          d.classList.toggle("is-active", di === index && i === index);
+        });
       });
-    };
+    }
+    function go(next) {
+      index = (next + slides.length) % slides.length;
+      render();
+    }
+    function startAuto() {
+      stopAuto();
+      auto = window.setInterval(function () { go(index + 1); }, 6000);
+    }
+    function stopAuto() {
+      if (auto) { window.clearInterval(auto); auto = null; }
+    }
+
     render();
+    startAuto();
 
-    const prev = document.querySelector(".car-btn.prev");
-    const next = document.querySelector(".car-btn.next");
-    prev && prev.addEventListener("click", () => {
-      index = (index - 1 + slides.length) % slides.length;
-      render();
+    var carousel = document.getElementById("carousel");
+    var prev = carousel ? carousel.querySelector(".car-btn.prev") : null;
+    var next = carousel ? carousel.querySelector(".car-btn.next") : null;
+    if (prev) prev.addEventListener("click", function () { go(index - 1); startAuto(); });
+    if (next) next.addEventListener("click", function () { go(index + 1); startAuto(); });
+
+    if (carousel) {
+      carousel.addEventListener("mouseenter", stopAuto);
+      carousel.addEventListener("mouseleave", startAuto);
+      carousel.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowLeft") { go(index - 1); startAuto(); }
+        else if (e.key === "ArrowRight") { go(index + 1); startAuto(); }
+      });
+    }
+
+    // Click on indicator dots to jump
+    track.querySelectorAll(".car-dots span").forEach(function (dot, di) {
+      dot.addEventListener("click", function () { go(di); startAuto(); });
     });
-    next && next.addEventListener("click", () => {
-      index = (index + 1) % slides.length;
-      render();
+  }
+
+  /* -------- Signup role selector (?role=dancer|owner|patron) -------- */
+  var roleGrid = document.getElementById("roleGrid");
+  var signupRoleInput = document.getElementById("signupRole");
+  var signupTitle = document.getElementById("signupTitle");
+  var signupSubtitle = document.getElementById("signupSubtitle");
+  var ownerOnlyRows = document.querySelectorAll("#signupForm .owner-only");
+
+  function applyRole(role) {
+    if (!role) return;
+    if (signupRoleInput) signupRoleInput.value = role;
+
+    var titles = {
+      dancer: { title: "JOIN AS A DANCER", sub: "Manage your bookings, share availability, and grow your client base." },
+      owner: { title: "JOIN AS A CLUB OWNER", sub: "Add your venue details so we can connect dancers and patrons to your room." },
+      patron: { title: "JOIN AS A PATRON", sub: "Plan your night and book entertainment, sections, and bottles before you arrive." }
+    };
+    if (titles[role]) {
+      if (signupTitle) signupTitle.textContent = titles[role].title;
+      if (signupSubtitle) signupSubtitle.textContent = titles[role].sub;
+    }
+
+    if (ownerOnlyRows.length) {
+      ownerOnlyRows.forEach(function (row) {
+        var inputs = row.querySelectorAll("input, select, textarea");
+        if (role === "owner") {
+          row.hidden = false;
+          inputs.forEach(function (inp) { inp.required = true; });
+        } else {
+          row.hidden = true;
+          inputs.forEach(function (inp) { inp.required = false; });
+        }
+      });
+    }
+
+    if (roleGrid) {
+      roleGrid.querySelectorAll(".role-card").forEach(function (card) {
+        card.classList.toggle("selected", card.dataset.role === role);
+      });
+    }
+  }
+
+  if (roleGrid) {
+    var params = new URLSearchParams(window.location.search);
+    var initialRole = params.get("role");
+    if (initialRole) applyRole(initialRole);
+
+    roleGrid.addEventListener("click", function (e) {
+      var card = e.target.closest(".role-card");
+      if (!card) return;
+      applyRole(card.dataset.role);
+      var form = document.getElementById("signupForm");
+      if (form) form.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  /* -------- Static form validation + success message -------- */
+  document.querySelectorAll("form.static-form").forEach(function (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var ok = true;
+      form.querySelectorAll("[required]").forEach(function (field) {
+        if (field.offsetParent === null) return; // skip hidden
+        var value = (field.value || "").trim();
+        var valid = value.length > 0;
+        if (field.type === "email" && valid) {
+          valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        }
+        if (field.type === "tel" && valid) {
+          valid = /\d{7,}/.test(value.replace(/\D/g, ""));
+        }
+        field.classList.toggle("invalid", !valid);
+        if (!valid) ok = false;
+      });
+
+      var success = form.querySelector(".form-success");
+      if (ok) {
+        if (success) success.hidden = false;
+        form.querySelectorAll("input, textarea, select").forEach(function (field) {
+          if (field.type !== "hidden") field.value = "";
+        });
+      } else {
+        if (success) success.hidden = true;
+      }
     });
 
-    // auto-rotate every 6s
-    setInterval(() => {
-      index = (index + 1) % slides.length;
-      render();
-    }, 6000);
+    form.querySelectorAll("input, textarea, select").forEach(function (field) {
+      field.addEventListener("input", function () { field.classList.remove("invalid"); });
+    });
+  });
+
+  /* -------- Locations: map embed search -------- */
+  var mapForm = document.getElementById("mapSearchForm");
+  var mapFrame = document.getElementById("mapFrame");
+  if (mapForm && mapFrame) {
+    mapForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var input = document.getElementById("mapQuery");
+      var q = input ? (input.value || "").trim() : "";
+      if (!q) return;
+      var encoded = encodeURIComponent(q + " nightlife");
+      mapFrame.src = "https://www.google.com/maps?q=" + encoded + "&output=embed";
+    });
+  }
+
+  /* -------- Help: discreet "Get Help" button -------- */
+  var getHelpBtn = document.getElementById("getHelpBtn");
+  if (getHelpBtn) {
+    getHelpBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      // Send users to a search for the National Human Trafficking Hotline so
+      // they reach the most current verified contact info, not a hardcoded
+      // number that may have changed.
+      window.open("https://www.google.com/search?q=National+Human+Trafficking+Hotline", "_blank", "noopener");
+    });
   }
 })();

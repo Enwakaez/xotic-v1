@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>xxxotic | Locations</title>
+  <meta name="description" content="Find xxxotic nightlife venues. Starting with iconic Atlanta clubs and lounges, with more cities rolling out soon." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="body active" data-page="locations">
+
+  <header class="global-nav" id="globalNav">
+    <div class="nav-inner">
+      <nav class="nav-left" aria-label="Primary">
+        <a href="index.html" class="nav-link" data-nav="home">HOME</a>
+        <div class="nav-item has-dropdown">
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">FEATURES <span class="caret" aria-hidden="true">&#9662;</span></button>
+          <div class="dropdown-menu" role="menu">
+            <a href="for-dancers.html" role="menuitem">For Dancers</a>
+            <a href="for-club-owners.html" role="menuitem">For Club Owners</a>
+            <a href="for-patrons.html" role="menuitem">For Patrons</a>
+            <a href="dancers.html" role="menuitem">Meet the Roster</a>
+            <a href="payment-processing.html" role="menuitem">Payment Processing</a>
+          </div>
+        </div>
+        <a href="pricing.html" class="nav-link" data-nav="pricing">PRICING</a>
+        <a href="locations.html" class="nav-link" data-nav="locations">LOCATIONS</a>
+      </nav>
+      <a href="index.html" class="brand" aria-label="xxxotic home"><span class="brand-mark">xxx<em>otic</em></span></a>
+      <nav class="nav-right" aria-label="Secondary">
+        <a href="help.html" class="nav-link" data-nav="help">HELP &amp; RESOURCES</a>
+        <a href="blog.html" class="nav-link" data-nav="blog">BLOG</a>
+        <a href="store.html" class="nav-link" data-nav="store">STORE</a>
+        <a href="download.html" class="nav-link" data-nav="download">DOWNLOAD</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <section class="page-hero section center">
+      <div class="bg-pattern" aria-hidden="true"></div>
+      <div class="container narrow">
+        <h1 class="display xl">FIND NIGHTLIFE NEAR YOU</h1>
+        <p class="lede">Explore clubs, lounges, and nightlife options. Starting with Atlanta and rolling out city by city.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <form class="map-search" id="mapSearchForm" role="search">
+          <label class="visually-hidden" for="mapQuery">Search a city or state</label>
+          <input id="mapQuery" name="q" type="text" placeholder="Search a city or state, e.g. Houston, TX" />
+          <button type="submit" class="btn btn-light">SEARCH</button>
+        </form>
+
+        <div class="map-section" data-default-query="Atlanta nightlife clubs and lounges">
+          <iframe
+            id="mapFrame"
+            title="xxxotic locations map"
+            width="100%"
+            height="520"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Atlanta+nightlife+clubs+and+lounges&output=embed"></iframe>
+        </div>
+        <p class="muted small">Map uses Google Maps' public embed. Update the search above to switch cities.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="display">FEATURED ATLANTA VENUES</h2>
+        <p class="muted">Verify current details with each venue before visiting. Listings below are launch-roster placeholders.</p>
+
+        <div class="venue-grid">
+          <article class="venue-card">
+            <h3>MAGIC CITY</h3>
+            <p class="venue-meta">Atlanta, GA</p>
+            <p class="venue-desc">Iconic Atlanta nightlife institution.</p>
+            <p class="muted small">Official handle pending verification.</p>
+            <div class="venue-actions">
+              <a class="btn btn-outline" href="https://www.google.com/maps?q=Magic+City+Atlanta&output=embed" target="_blank" rel="noopener">View on Map</a>
+              <a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>
+            </div>
+          </article>
+
+          <article class="venue-card">
+            <h3>BLUE FLAME</h3>
+            <p class="venue-meta">Atlanta, GA</p>
+            <p class="venue-desc">Long-standing nightlife destination.</p>
+            <p class="muted small">Official handle pending verification.</p>
+            <div class="venue-actions">
+              <a class="btn btn-outline" href="https://www.google.com/maps?q=Blue+Flame+Atlanta&output=embed" target="_blank" rel="noopener">View on Map</a>
+              <a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>
+            </div>
+          </article>
+
+          <article class="venue-card">
+            <h3>ONYX ATLANTA</h3>
+            <p class="venue-meta">Atlanta, GA</p>
+            <p class="venue-desc">Premium ATL nightlife venue.</p>
+            <p class="muted small">Official handle pending verification.</p>
+            <div class="venue-actions">
+              <a class="btn btn-outline" href="https://www.google.com/maps?q=Onyx+Atlanta&output=embed" target="_blank" rel="noopener">View on Map</a>
+              <a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>
+            </div>
+          </article>
+
+          <article class="venue-card">
+            <h3>PIN UPS</h3>
+            <p class="venue-meta">Atlanta, GA</p>
+            <p class="venue-desc">Notable Atlanta entertainment venue.</p>
+            <p class="muted small">Official handle pending verification.</p>
+            <div class="venue-actions">
+              <a class="btn btn-outline" href="https://www.google.com/maps?q=Pin+Ups+Atlanta&output=embed" target="_blank" rel="noopener">View on Map</a>
+              <a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>
+            </div>
+          </article>
+
+          <article class="venue-card">
+            <h3>STROKERS</h3>
+            <p class="venue-meta">Atlanta, GA</p>
+            <p class="venue-desc">Established nightlife club.</p>
+            <p class="muted small">Official handle pending verification.</p>
+            <div class="venue-actions">
+              <a class="btn btn-outline" href="https://www.google.com/maps?q=Strokers+Atlanta&output=embed" target="_blank" rel="noopener">View on Map</a>
+              <a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section center">
+      <div class="container narrow">
+        <h2 class="display xl">OWN A VENUE?</h2>
+        <p class="lede muted">Get listed on xxxotic and reach patrons before they hit the door.</p>
+        <div class="cta-row center-row">
+          <a href="signup.html?role=owner" class="btn btn-light">LIST YOUR CLUB</a>
+          <a href="for-club-owners.html#owner-inquiry" class="btn btn-outline">CONTACT US</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="foot-col"><h4>COMPANY</h4><ul><li><a href="about.html">About Us</a></li><li><a href="blog.html">Blog</a></li><li><a href="store.html">Store</a></li><li><a href="brand-ambassador.html">Brand Ambassador</a></li></ul></div>
+      <div class="foot-col"><h4>FEATURES</h4><ul><li><a href="for-dancers.html">For Dancers</a></li><li><a href="for-club-owners.html">For Club Owners</a></li><li><a href="for-patrons.html">For Patrons</a></li><li><a href="dancers.html">Meet the Roster</a></li><li><a href="payment-processing.html">Payment Processing</a></li><li><a href="pricing.html">Pricing</a></li></ul></div>
+      <div class="foot-col"><h4>RESOURCES</h4><ul><li><a href="help.html">Help Center</a></li><li><a href="locations.html">Locations</a></li><li><a href="download.html">Download</a></li><li><a href="terms.html">Terms of Service</a></li><li><a href="privacy.html">Privacy Policy</a></li></ul></div>
+      <div class="foot-brand">
+        <a href="index.html" class="foot-brand-link" aria-label="xxxotic home"><span class="brand-mark xl">xxx<em>otic</em></span></a>
+        <p class="foot-dl">DOWNLOAD TODAY</p>
+        <div class="store-row">
+          <a href="download.html" class="store-btn" data-store="ios"><span>Download on the</span><strong>App Store</strong></a>
+          <a href="download.html" class="store-btn" data-store="android"><span>Get it on</span><strong>Google Play</strong></a>
+        </div>
+      </div>
+    </div>
+    <div class="container foot-bottom">
+      <p>&copy; <span id="currentYear"></span> xxxotic Inc.</p>
+      <div class="foot-legal"><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a></div>
+      <div class="socials" aria-label="Social media">
+        <a href="#" aria-label="YouTube (coming soon)" data-social="youtube">YT</a>
+        <a href="#" aria-label="X (coming soon)" data-social="x">X</a>
+        <a href="#" aria-label="Facebook (coming soon)" data-social="facebook">FB</a>
+        <a href="#" aria-label="Instagram (coming soon)" data-social="instagram">IG</a>
+        <a href="#" aria-label="TikTok (coming soon)" data-social="tiktok">TT</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
