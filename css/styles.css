@@ -953,11 +953,25 @@ ul { list-style: none; padding: 0; margin: 0; }
   display: flex;
   flex-direction: column;
   gap: 14px;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease,
+    transform 180ms ease;
 }
-.pricing-card.featured {
+.pricing-card:hover {
+  border-color: rgba(255,255,255,0.34);
+  transform: translateY(-2px);
+}
+.pricing-card.is-selected {
   border-color: rgba(168,123,255,0.55);
   box-shadow: 0 0 0 1px rgba(168,123,255,0.25), 0 30px 80px rgba(0,0,0,0.5);
   background: linear-gradient(160deg, rgba(168,123,255,0.08), var(--surface));
+}
+.pricing-card:focus-visible {
+  outline: 3px solid rgba(255,255,255,0.9);
+  outline-offset: 5px;
 }
 .pricing-flag {
   position: absolute;

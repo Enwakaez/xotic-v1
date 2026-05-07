@@ -121,12 +121,15 @@ xotic-v1/
 - [x] Three owner-focused tiers: Starter $99/mo, Growth $249/mo (featured),
       Premium $499/mo
 - [x] Visible "temporary for MVP planning" note
+- [x] Pricing cards are selectable; the selected plan ring and primary CTA
+      treatment can move between Starter, Growth, and Premium.
 
 ### Locations / map
 - [x] Google Maps key-less embed (default: Atlanta nightlife)
 - [x] City/state search input updates the iframe `src`
 - [x] Featured venue cards (Magic City, Blue Flame, Onyx Atlanta, Pin Ups,
-      Strokers) with per-venue "View on Map" links
+      Strokers) with per-venue "View on Map" buttons that update the
+      embedded map in-page
 - [x] All venue handles intentionally marked "Official handle pending"
 
 ### Help & safety
@@ -360,6 +363,39 @@ These need someone (June, Wes, or Peggy) to confirm or supply values.
 - **Note**:
   - The replacement is still not Atlanta-specific and does not show literal
     bottle girls delivering service to a club section.
+
+### 2026-05-07 — Pricing plan selector
+
+- **Updated** `pricing.html`:
+  - Added selectable plan metadata, radio semantics, plan-specific signup
+    URLs, and default selected state on Growth.
+- **Updated** `css/styles.css`:
+  - Moved the purple ring / shadow / highlighted background treatment to
+    `.pricing-card.is-selected` so any plan can receive it.
+  - Added hover and focus-visible treatment for selectable pricing cards.
+- **Updated** `js/main.js`:
+  - Added click, Enter/Space, and Arrow key handling to move selected state
+    between Starter, Growth, and Premium.
+  - Selected card CTA switches to the primary light button treatment while
+    non-selected cards use outline buttons.
+- **Verified**:
+  - `http://localhost:3000/pricing.html` returns 200.
+  - Pricing markup includes radiogroup/card state attributes and
+    plan-specific signup URLs.
+
+### 2026-05-07 — Locations venue map buttons
+
+- **Updated** `locations.html`:
+  - Replaced per-venue Google Maps embed links with in-page `View on Map`
+    buttons using `data-map-query`.
+- **Updated** `js/main.js`:
+  - Added shared `updateMap()` helper for the locations map.
+  - Venue buttons now update the existing map iframe and scroll users back
+    to the map instead of opening Google's iframe-only embed URL in a new
+    tab.
+- **Verified**:
+  - `http://localhost:3000/locations.html` returns 200.
+  - Venue buttons no longer contain `target="_blank"` embed links.
 
 ### 2026-05-05 — Earlier session
 

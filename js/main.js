@@ -288,7 +288,7 @@
   if (roleGrid) {
     var params = new URLSearchParams(window.location.search);
     var initialRole = params.get("role");
-    if (initialRole) applyRole(initialRole);
+  if (initialRole) applyRole(initialRole);
 
     roleGrid.addEventListener("click", function (e) {
       var card = e.target.closest(".role-card");
@@ -296,6 +296,44 @@
       applyRole(card.dataset.role);
       var form = document.getElementById("signupForm");
       if (form) form.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  /* -------- Pricing plan selector -------- */
+  var pricingCards = Array.prototype.slice.call(document.querySelectorAll("[data-plan-card]"));
+  if (pricingCards.length) {
+    function selectPricingPlan(card) {
+      pricingCards.forEach(function (planCard) {
+        var selected = planCard === card;
+        var cta = planCard.querySelector("[data-plan-cta]");
+        planCard.classList.toggle("is-selected", selected);
+        planCard.setAttribute("aria-checked", String(selected));
+        if (cta) {
+          cta.classList.toggle("btn-light", selected);
+          cta.classList.toggle("btn-outline", !selected);
+        }
+      });
+    }
+
+    pricingCards.forEach(function (card) {
+      card.addEventListener("click", function (e) {
+        selectPricingPlan(card);
+      });
+
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          selectPricingPlan(card);
+        }
+        if (["ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"].indexOf(e.key) !== -1) {
+          e.preventDefault();
+          var currentIndex = pricingCards.indexOf(card);
+          var direction = (e.key === "ArrowLeft" || e.key === "ArrowUp") ? -1 : 1;
+          var nextCard = pricingCards[(currentIndex + direction + pricingCards.length) % pricingCards.length];
+          selectPricingPlan(nextCard);
+          nextCard.focus();
+        }
+      });
     });
   }
 
@@ -383,13 +421,24 @@
   var mapForm = document.getElementById("mapSearchForm");
   var mapFrame = document.getElementById("mapFrame");
   if (mapForm && mapFrame) {
+    var mapInput = document.getElementById("mapQuery");
+    function updateMap(query) {
+      var q = (query || "").trim();
+      if (!q) return;
+      mapFrame.src = "https://www.google.com/maps?q=" + encodeURIComponent(q) + "&output=embed";
+      if (mapInput) mapInput.value = q;
+      mapFrame.closest(".map-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
     mapForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      var input = document.getElementById("mapQuery");
-      var q = input ? (input.value || "").trim() : "";
-      if (!q) return;
-      var encoded = encodeURIComponent(q + " nightlife");
-      mapFrame.src = "https://www.google.com/maps?q=" + encoded + "&output=embed";
+      updateMap(mapInput ? mapInput.value + " nightlife" : "");
+    });
+
+    document.querySelectorAll("[data-map-query]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        updateMap(button.dataset.mapQuery || "");
+      });
     });
   }
 

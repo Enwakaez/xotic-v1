@@ -54,9 +54,9 @@
 
     <section class="section">
       <div class="container">
-        <div class="pricing-grid">
+        <div class="pricing-grid" role="radiogroup" aria-label="Club owner pricing plans">
 
-          <article class="pricing-card">
+          <article class="pricing-card" data-plan-card data-plan="starter" role="radio" aria-checked="false" tabindex="0">
             <h2 class="pricing-name">STARTER</h2>
             <p class="pricing-tag">Small venues testing the platform.</p>
             <p class="pricing-price"><span class="pricing-amount">$99</span><span class="pricing-period">/mo</span></p>
@@ -67,10 +67,10 @@
               <li>Limited dancer roster visibility</li>
               <li>Email support</li>
             </ul>
-            <a href="signup.html?role=owner" class="btn btn-outline">START FREE</a>
+            <a href="signup.html?role=owner&amp;plan=starter" class="btn btn-outline" data-plan-cta>START FREE</a>
           </article>
 
-          <article class="pricing-card featured">
+          <article class="pricing-card featured is-selected" data-plan-card data-plan="growth" role="radio" aria-checked="true" tabindex="0">
             <span class="pricing-flag">MOST POPULAR</span>
             <h2 class="pricing-name">GROWTH</h2>
             <p class="pricing-tag">Active clubs wanting more bookings.</p>
@@ -84,10 +84,10 @@
               <li>Basic analytics</li>
               <li>Priority support</li>
             </ul>
-            <a href="signup.html?role=owner" class="btn btn-light">START FREE</a>
+            <a href="signup.html?role=owner&amp;plan=growth" class="btn btn-light" data-plan-cta>START FREE</a>
           </article>
 
-          <article class="pricing-card">
+          <article class="pricing-card" data-plan-card data-plan="premium" role="radio" aria-checked="false" tabindex="0">
             <h2 class="pricing-name">PREMIUM</h2>
             <p class="pricing-tag">Full marketplace visibility.</p>
             <p class="pricing-price"><span class="pricing-amount">$499</span><span class="pricing-period">/mo</span></p>
@@ -100,7 +100,7 @@
               <li>Premium support</li>
               <li>Future payment processing readiness</li>
             </ul>
-            <a href="signup.html?role=owner" class="btn btn-outline">START FREE</a>
+            <a href="signup.html?role=owner&amp;plan=premium" class="btn btn-outline" data-plan-cta>START FREE</a>
           </article>
 
         </div>
