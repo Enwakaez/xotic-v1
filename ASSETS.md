@@ -12,7 +12,8 @@ neutral, royalty-free placeholders.
 | Page          | Element                  | Source                                    | Status                                 |
 |---------------|--------------------------|-------------------------------------------|----------------------------------------|
 | dancers.html  | All 6 dancer photos      | Unsplash photo `1547153760-18fc86324498` | Placeholder. Same image repeated.      |
-| index.html    | Hero "video"             | Pure CSS placeholder (no image)           | Local CSS only.                        |
+| index.html    | Hero video               | Pexels video `16476271` by Yashar Basir | Local MP4 in `assets/video/`.       |
+| index.html    | Hero video poster        | Pexels video thumbnail `16476271`       | Local poster in `assets/img/`.       |
 | index.html    | Phone mockups            | Pure CSS placeholders (no image)          | Local CSS only.                        |
 | download.html | App icons                | Inline SVG                                | Original brand glyphs.                 |
 | download.html | Google Play colors       | Inline SVG                                | Generic colored geometric SVG.         |
@@ -20,6 +21,34 @@ neutral, royalty-free placeholders.
 
 All other pages use color, type, and CSS-only visual elements — no
 external image dependencies.
+
+---
+
+## Hero video source
+
+- **File:** `assets/video/hero-bottle-service-loop.mp4`
+- **Poster:** `assets/img/hero-bottle-service-poster.jpg`
+- **Title:** DJ performing in the night club
+- **Creator:** Yashar Basir
+- **Source:** https://www.pexels.com/video/dj-performing-in-the-night-club-16476271/
+- **Poster source:** Pexels video thumbnail for video `16476271`
+- **License:** Pexels License, https://www.pexels.com/license/
+- **License note:** Pexels photos and videos can be downloaded and used for
+  free, including commercial website/app use. Attribution is not required,
+  and modification is allowed.
+- **Date accessed:** 2026-05-07
+- **Attribution requirement:** None required by Pexels; credit documented
+  here for asset tracking.
+- **Optimization note:** The local MP4 is an 18-second 720p Pexels
+  download, served locally as decorative homepage marketing media with no
+  browser controls. The selected file is under 10 MB. No WebM was generated
+  because no local video transcoder (`ffmpeg`, `HandBrakeCLI`, or
+  equivalent) was available in the workspace.
+- **Selection note:** This clip was selected by the project owner. It is a
+  legally clean nightclub / DJ performance scene with crowd energy,
+  lighting, and nightlife context. It is not Atlanta-specific venue footage
+  and does not show literal bottle girls delivering service to a club
+  section.
 
 ---
 

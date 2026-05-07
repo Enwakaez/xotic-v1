@@ -1,6 +1,6 @@
 # AGENTS.md — Project Context & Session Log
 
-**Last Updated:** 2026-05-06
+**Last Updated:** 2026-05-07
 **Project:** xxxotic v1 (Nightlife Entertainment Platform)
 **Repository:** https://github.com/Enwakaez/xotic-v1
 **Current Branch:** feature/xotic-init
@@ -45,7 +45,8 @@ xotic-v1/
 |-- privacy.html               # Draft Privacy Policy
 |-- css/styles.css             # Single stylesheet (v1.1 additions appended)
 |-- js/main.js                 # Single script
-|-- assets/img/                # Local image directory (empty — placeholder)
+|-- assets/img/                # Local image directory
+|-- assets/video/              # Local video directory
 |-- ASSETS.md                  # Image source notes & replacement plan
 |-- README.md                  # Original README (architecture diagram)
 |-- AGENTS.md                  # THIS FILE
@@ -78,7 +79,7 @@ xotic-v1/
 - [x] START TODAY / START FREE → `signup.html` (or `?role=…` variant)
 - [x] HOW DANCERS WORKS → `for-dancers.html`
 - [x] HOW OWNERS MANAGE → `for-club-owners.html`
-- [x] HOW CLIENTS BOOK → `for-patrons.html`
+- [x] HOW PATRONS BOOK → `for-patrons.html`
 - [x] App Store / Google Play buttons → `download.html` (placeholder
       destination); `APP_STORE_URL` / `GOOGLE_PLAY_URL` constants live at
       the top of `js/main.js` and rewrite every `[data-store]` element
@@ -92,6 +93,14 @@ xotic-v1/
 - [x] Each venue tagged "Official handle pending" until verified
 - [x] Auto-rotate, prev/next, indicator dots, ArrowLeft/Right keyboard,
       pause-on-hover
+
+### Homepage media
+- [x] Replaced the homepage hero CSS placeholder with a local autoplaying,
+      muted, looping, inline MP4 video.
+- [x] Added local hero video poster image.
+- [x] Added reduced-motion handling that pauses the hero video and removes
+      autoplay for users who prefer reduced motion.
+- [x] Documented Pexels source and license in `ASSETS.md`.
 
 ### Forms (static, validated)
 - [x] Dancer application form on `for-dancers.html`
@@ -149,7 +158,7 @@ xotic-v1/
 ### Docs
 - [x] `ASSETS.md` documenting every external image and a per-page
       replacement plan
-- [x] `assets/img/` directory created
+- [x] `assets/img/` and `assets/video/` directories created
 - [x] `AGENTS.md` updated with full session log
 
 ---
@@ -259,6 +268,40 @@ These need someone (June, Wes, or Peggy) to confirm or supply values.
 - **Created** `NEXT_PROMPT.md` for the upcoming Browser QA + form-backend
   activity.
 
+### 2026-05-06 — Homepage hero video
+
+- **Updated** `index.html`:
+  - Replaced the hero media placeholder and decorative play button with a
+    semantic `<video>` element.
+  - Added `autoplay`, `muted`, `loop`, `playsinline`, `preload="metadata"`,
+    and a local poster image.
+- **Updated** `css/styles.css`:
+  - Added `.hero-media-card`, `.hero-video`, and `.hero-video-overlay`
+    styles to keep the video embedded in the existing rounded hero card.
+  - Added mobile min-height tuning and reduced-motion CSS support.
+- **Updated** `js/main.js`:
+  - Added reduced-motion handling to pause the hero video and remove
+    autoplay when the user's OS requests reduced motion.
+- **Added** `assets/video/hero-bottle-service-loop.mp4`:
+  - Source: Pexels video "DJ performing in the night club" by Yashar Basir.
+  - Local 720p MP4 selected as a legally clean nightclub / DJ performance
+    clip.
+- **Added** `assets/img/hero-bottle-service-poster.jpg`:
+  - Source: Pexels video thumbnail for "DJ performing in the night club" by
+    Yashar Basir.
+  - Local poster image for loading and reduced-motion state.
+- **Updated** `ASSETS.md` with source, creator, license, date accessed, and
+  optimization notes.
+- **Verified**:
+  - Homepage HTML contains the expected autoplay/muted/loop/playsinline
+    video attributes and local MP4/poster paths.
+  - Local static server returns the homepage, MP4, and JPG assets.
+- **Note**:
+  - No WebM was generated because no local video transcoder was available
+    in the workspace.
+  - The clip is not Atlanta-specific and does not show literal bottle girls
+    delivering service to a club section.
+
 ### 2026-05-06 — QA polish + Formspree-ready forms
 
 - **Updated** `css/styles.css`:
@@ -297,6 +340,26 @@ These need someone (June, Wes, or Peggy) to confirm or supply values.
   - Could not complete automated headless-browser visual QA because Chrome
     headless screenshot/CDP startup was blocked by local access restrictions;
     manual browser QA is still required.
+
+### 2026-05-07 — Homepage hero video replacement
+
+- **Replaced** `assets/video/hero-bottle-service-loop.mp4`:
+  - Source: Pexels video "DJ performing in the night club" by Yashar Basir.
+  - 18-second 720p MP4, under 10 MB, selected by the project owner for a
+    stronger DJ / nightclub / crowd-energy feel.
+- **Replaced** `assets/img/hero-bottle-service-poster.jpg`:
+  - Source: Pexels video thumbnail for the same video.
+- **Kept** the existing homepage implementation in `index.html`:
+  - Same local asset paths.
+  - Same `autoplay`, `muted`, `loop`, `playsinline`, and
+    `preload="metadata"` behavior.
+- **Updated** `ASSETS.md` and `NEXT_PROMPT.md` to reference the new source.
+- **Verified**:
+  - `http://localhost:3000/index.html` returns 200.
+  - Local MP4 and poster asset URLs return 200.
+- **Note**:
+  - The replacement is still not Atlanta-specific and does not show literal
+    bottle girls delivering service to a club section.
 
 ### 2026-05-05 — Earlier session
 

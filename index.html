@@ -80,11 +80,20 @@
         </div>
 
         <div class="hero-media">
-          <div class="video-frame" role="img" aria-label="Intro video placeholder">
-            <div class="video-placeholder"></div>
-            <button class="play-btn" aria-label="Play intro">
-              <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path fill="#000" d="M8 5v14l11-7z"/></svg>
-            </button>
+          <div class="hero-media-card" aria-label="Nightlife bottle service video preview">
+            <video
+              class="hero-video"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="assets/img/hero-bottle-service-poster.jpg"
+            >
+              <source src="assets/video/hero-bottle-service-loop.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <div class="hero-video-overlay" aria-hidden="true"></div>
           </div>
         </div>
       </div>

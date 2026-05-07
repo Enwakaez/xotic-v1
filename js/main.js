@@ -27,6 +27,14 @@
     });
   }
 
+  /* -------- Hero video: respect reduced motion -------- */
+  var heroVideo = document.querySelector(".hero-video");
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (heroVideo && reduceMotion) {
+    heroVideo.pause();
+    heroVideo.removeAttribute("autoplay");
+  }
+
   /* -------- Footer year -------- */
   var yearEl = document.getElementById("currentYear");
   if (yearEl) yearEl.textContent = new Date().getFullYear();

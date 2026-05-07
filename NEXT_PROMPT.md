@@ -18,6 +18,8 @@ ASSETS.md first.
 
 Current state:
   - 17 HTML pages all return 200 on http://localhost:3000.
+  - Homepage hero media uses a local Pexels MP4 DJ / nightclub clip with
+    local poster.
   - Footer social text glyphs were replaced with inline SVG logos.
   - Mobile nav now uses a generated drawer from js/main.js.
   - All 5 lead forms have Formspree metadata fields:
