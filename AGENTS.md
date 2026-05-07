@@ -1,7 +1,7 @@
 # AGENTS.md — Project Context & Session Log
 
 **Last Updated:** 2026-05-07
-**Project:** xxxotic v1 (Nightlife Entertainment Platform)
+**Project:** xxxotic v1 (Nightlife Platform — Marketing + Registration MVP)
 **Repository:** https://github.com/Enwakaez/xotic-v1
 **Current Branch:** feature/xotic-init
 
@@ -10,15 +10,15 @@
 ## Project Overview
 
 **xxxotic** is a nightlife marketplace and coordination platform connecting
-**dancers**, **club / lounge owners**, and **patrons**. The MVP is a
-dark-themed, responsive, static marketing site built with vanilla HTML, CSS,
-and JavaScript — no build step, no framework, ready for static hosting on
-GoDaddy.
+**dancers**, **club / lounge owners**, and **patrons**. The repo now ships
+a registration / booking MVP on top of the marketing site, backed by
+**Supabase** (Postgres + Auth + Storage). Vanilla HTML/CSS/JS, no build
+step, deployable as a static bundle on GoDaddy.
 
-**Status:** Full MVP marketing site (17 HTML pages) — landing + audience
-pages, sign-up flow, pricing, locations w/ map, help + safety, blog,
-payment processing, about, brand ambassador, store, download, terms, and
-privacy. Functional but not production-ready (see [Remaining Work](#remaining-work)).
+**Status:** Marketing site + functional Auth + role-based dashboards +
+public dancer profile + booking flow + edit-profile + Supabase-backed
+inquiries + live featured-venues feed. Defensive degradation everywhere
+when Supabase isn't yet configured.
 
 ---
 
@@ -27,205 +27,196 @@ privacy. Functional but not production-ready (see [Remaining Work](#remaining-wo
 ```
 xotic-v1/
 |-- index.html                 # Landing
-|-- dancers.html               # Roster
-|-- for-dancers.html           # Audience: dancers
-|-- for-club-owners.html       # Audience: owners
-|-- for-patrons.html           # Audience: patrons
-|-- signup.html                # Universal sign-up (role from ?role=…)
-|-- pricing.html               # Owner plans (placeholder pricing)
-|-- locations.html             # Atlanta map + venue grid
+|-- dancers.html               # Roster (links to dancer-profile.html?id=...)
+|-- dancer-profile.html        # Public dancer profile + booking form
+|-- signup.html                # Role-aware signup -> Supabase Auth + profiles
+|-- login.html                 # Email + password login
+|-- dashboard.html             # Role-routed dashboard
+|-- edit-profile.html          # Role-routed profile editor
+|-- for-dancers.html           # Marketing + dancer inquiry form
+|-- for-club-owners.html       # Marketing + owner inquiry form
+|-- for-patrons.html           # Marketing + patron waitlist form
+|-- pricing.html               # Owner plans (signup.html?role=owner&plan=...)
+|-- locations.html             # Atlanta map + static cards + live Supabase feed
 |-- help.html                  # Site help, FAQ, safety/HT resources
 |-- download.html              # iOS / Android (waitlist for now)
-|-- store.html                 # Merch — coming soon
+|-- store.html                 # Apparel / Event Drops / Digital Products
 |-- blog.html                  # Why each user group needs xxxotic
 |-- payment-processing.html    # Planned payments feature page
 |-- about.html                 # June / Wes / Peggy
-|-- brand-ambassador.html      # Ambassador application
+|-- brand-ambassador.html      # Marketing + ambassador application
 |-- terms.html                 # Draft Terms of Service
 |-- privacy.html               # Draft Privacy Policy
-|-- css/styles.css             # Single stylesheet (v1.1 additions appended)
-|-- js/main.js                 # Single script
-|-- assets/img/                # Local image directory
-|-- assets/video/              # Local video directory
-|-- ASSETS.md                  # Image source notes & replacement plan
-|-- README.md                  # Original README (architecture diagram)
+|-- css/styles.css             # Single stylesheet (v1.2 additions appended)
+|-- js/
+|   |-- config.js              # Supabase URL + anon key + global client
+|   |-- api.js                 # DB helpers (profiles, dancers, bookings, ...)
+|   |-- auth.js                # Auth + signup helpers + config banner
+|   `-- main.js                # Nav, dropdown, carousel, forms, maps
+|-- backend/
+|   |-- supabase-schema.sql    # Full schema + RLS + triggers
+|   |-- seed.sql               # Featured venues + sample profile rows
+|   `-- README.md              # Supabase walk-through
+|-- docs/
+|   `-- testing-users.md       # sample_dancer + sample_patron walkthrough
+|-- assets/img/                # Empty — placeholder
+|-- ASSETS.md
+|-- README.md
 |-- AGENTS.md                  # THIS FILE
-|-- NEXT_PROMPT.md             # Prompt for the next planned activity
+`-- NEXT_PROMPT.md
 ```
 
 ---
 
 ## Done So Far
 
-### Site infrastructure
-- [x] 15 new HTML pages created (full site map above)
-- [x] `index.html` and `dancers.html` updated to share the new nav + footer
-- [x] Section IDs corrected on `index.html` (`for-barbers` → `for-dancers`,
-      `for-clients` → `for-patrons`)
-- [x] Header brand mark + footer brand mark both link to `index.html`
-- [x] Footer rebalanced (removed Careers / Reviews / New Releases / Case
-      Studies / Tax Prep / Service & Policy Calculators)
+### Marketing site polish (Phase 1)
+- [x] Store page: ACCESSORIES card removed, layout rebalanced to 3 cards
+- [x] Homepage 3-step copy updated: dancers add photos+availability+location;
+      owners set up venue details; patrons "name, phone number, and email"
+      (no photo)
+- [x] Atlanta venue Instagram handles wired everywhere
+      (homepage carousel + locations cards):
+      - Magic City -> @magiccityatlanta
+      - Pin Ups -> @club_pinupsatl
+      - Blue Flame -> @BlueFlameLounge
+      - Strokers -> @strokersclub
+      - Onyx Atlanta -> @onyx_atlanta
+- [x] Roster BOOK buttons -> `dancer-profile.html?id={daisy|tina|onyx|icy|star|lucy}`
+- [x] All "Official handle pending" placeholders gone
 
-### Navigation
-- [x] Top nav identical on every page
-- [x] FEATURES dropdown supports hover, click, and keyboard
-      (Enter / Space / arrows / Escape)
-- [x] FEATURES dropdown items: For Dancers, For Club Owners, For Patrons,
-      Meet the Roster, Payment Processing
-- [x] Active nav highlighted by `data-page` / `data-nav` matching
-- [x] Mobile hamburger menu working
+### Backend (Phase 2-3)
+- [x] `backend/supabase-schema.sql` — 9 tables, indexes, updated_at
+      triggers, RLS policies for every role
+- [x] `backend/seed.sql` — featured venues + guarded blocks for the
+      sample_dancer / sample_patron profile rows
+- [x] `backend/README.md` — full Supabase walkthrough
+- [x] `docs/testing-users.md` — three ways to create the sample auth users
 
-### CTAs / button destinations
-- [x] START TODAY / START FREE → `signup.html` (or `?role=…` variant)
-- [x] HOW DANCERS WORKS → `for-dancers.html`
-- [x] HOW OWNERS MANAGE → `for-club-owners.html`
-- [x] HOW PATRONS BOOK → `for-patrons.html`
-- [x] App Store / Google Play buttons → `download.html` (placeholder
-      destination); `APP_STORE_URL` / `GOOGLE_PLAY_URL` constants live at
-      the top of `js/main.js` and rewrite every `[data-store]` element
-      site-wide once real URLs are set
-- [x] Footer Brand Ambassador / About / Blog / Store / Pricing / Terms /
-      Privacy / Help / Locations / Download all route to real pages
+### JS app layer (Phase 2/4)
+- [x] `js/config.js` — SUPABASE_URL + SUPABASE_ANON_KEY placeholders;
+      auto-creates client when configured
+- [x] `js/api.js` — wrappers for profile, patron/dancer/owner profile,
+      venues, dancer venues, booking_requests, inquiries, audit_events
+- [x] `js/auth.js` — getSession, getCurrentUser, requireSession,
+      signIn, signOut, signUpWithProfile (role-aware signup that creates
+      auth user + base profile + role-specific row), slug generator,
+      renderConfigBanner
+- [x] Updated `js/main.js`: inquiry forms now insert into the
+      `inquiries` table when Supabase is configured, fall back to
+      Formspree otherwise
 
-### Carousel
-- [x] Replaced barber Instagram handles with Atlanta venues
-      (Magic City, Blue Flame, Onyx Atlanta, Pin Ups, Strokers)
-- [x] Each venue tagged "Official handle pending" until verified
-- [x] Auto-rotate, prev/next, indicator dots, ArrowLeft/Right keyboard,
-      pause-on-hover
+### Auth + dashboards (Phase 4-5)
+- [x] `signup.html` — role-aware required fields, password + confirm,
+      `?role=` and `?plan=` URL params, plan banner, Supabase signup
+      via `auth.signUpWithProfile`, redirect to dashboard
+- [x] `login.html` — email + password, redirects to dashboard,
+      auto-bounces logged-in users straight through
+- [x] `dashboard.html` — role-routed shell with patron / dancer / owner
+      views. Patron view has search + browse + booking history. Dancer
+      view has copy-link, public toggle, profile-completeness checklist,
+      and inbound booking inbox with accept/decline actions. Owner view
+      shows venue info + selected plan.
 
-### Homepage media
-- [x] Replaced the homepage hero CSS placeholder with a local autoplaying,
-      muted, looping, inline MP4 video.
-- [x] Added local hero video poster image.
-- [x] Added reduced-motion handling that pauses the hero video and removes
-      autoplay for users who prefer reduced motion.
-- [x] Documented Pexels source and license in `ASSETS.md`.
+### Profiles + booking (Phase 6-7)
+- [x] `dancer-profile.html` — fetches public dancer by slug or id,
+      static placeholder fallback for the 6 roster dancers, Web Share
+      API + clipboard fallback, full booking form with role-aware gating
+      (logged out / wrong role / patron)
+- [x] `edit-profile.html` — role-routed editor: patron (city/state/
+      interests), dancer (stage name, bio, services, offerings,
+      availability JSON, venue appearances, public toggle), owner
+      (club name, business address/phone/email, website, plan,
+      inquiry message)
 
-### Forms (static, validated)
-- [x] Dancer application form on `for-dancers.html`
-- [x] Owner inquiry form on `for-club-owners.html`
-- [x] Patron waitlist on `for-patrons.html`
-- [x] Universal sign-up on `signup.html` (owner-only fields toggle on
-      `?role=owner`)
-- [x] Ambassador application on `brand-ambassador.html`
-- [x] Required fields, email + phone format checks, invalid-state styling,
-      success message, fields reset on success
-- [x] Visible "this isn't connected to a backend yet" notice on every form
-- [x] Formspree-ready hidden metadata added to all 5 forms (`_subject`,
-      `_form_source`, `_gotcha`)
-- [x] `js/main.js` can submit validated forms via `fetch()` once real
-      Formspree endpoint IDs are added to `FORMSPREE_ENDPOINTS`
+### Locations (Phase 8)
+- [x] Live Supabase feed of featured venues with static cards as
+      fallback; "View on Map" buttons update the iframe in-place
 
-### Pricing
-- [x] Three owner-focused tiers: Starter $99/mo, Growth $249/mo (featured),
-      Premium $499/mo
-- [x] Visible "temporary for MVP planning" note
-- [x] Pricing cards are selectable; the selected plan ring and primary CTA
-      treatment can move between Starter, Growth, and Premium.
+### Pricing (Phase 9)
+- [x] Already had `signup.html?role=owner&plan=...` CTAs; signup now
+      reads and stores `selected_plan` in `owner_profiles`
 
-### Locations / map
-- [x] Google Maps key-less embed (default: Atlanta nightlife)
-- [x] City/state search input updates the iframe `src`
-- [x] Featured venue cards (Magic City, Blue Flame, Onyx Atlanta, Pin Ups,
-      Strokers) with per-venue "View on Map" buttons that update the
-      embedded map in-page
-- [x] All venue handles intentionally marked "Official handle pending"
+### Inquiry backend (Phase 10)
+- [x] All four inquiry pages (for-dancers, for-club-owners, for-patrons,
+      brand-ambassador) load `js/config.js` + `js/api.js`; main.js
+      submits to `inquiries` table when configured, Formspree otherwise
 
-### Help & safety
-- [x] How to use the website (top-nav guide)
-- [x] Where each role should start
-- [x] FAQ accordion (`<details>` / `<summary>`)
-- [x] Safety / human-trafficking section with warning signs, how to seek
-      help, and a "Get Help" button that opens a search for the National
-      Human Trafficking Hotline (so users always reach the most current
-      verified contact info)
+### CSS (Phase 11/12)
+- [x] v1.2 styles appended: config banner, plan banner, store 3-grid,
+      dashboard header / cards / checklist / search results, booking
+      list + status pills, info grid, profile sections, booking gate,
+      venue social link, role badges, role-card selected state
 
-### Legal
-- [x] Full draft Terms of Service (20 numbered sections)
-- [x] Full draft Privacy Policy (16 numbered sections)
-- [x] Both pages carry visible "have a qualified attorney review" notes
+### Docs (Phase 11)
+- [x] README.md rewritten: overview, MVP capabilities, tech stack, local
+      setup, Supabase setup, Mermaid architecture diagram, all data
+      flows (registration, login, dashboard, booking, sharing, owner,
+      inquiries), project structure, data model table, GoDaddy
+      deployment, security notes, legal notes, remaining work
 
-### CSS / accessibility
-- [x] v1.1 styles appended for: page hero, feature grid, pricing cards,
-      forms, FAQ, safety callout, map, venue grid, blog cards, download,
-      team, legal docs, focus states, responsive overrides
-- [x] `aria-expanded`, `aria-haspopup`, `role="menu"` on dropdown
-- [x] Visible focus states on every interactive element
-- [x] Required `alt` text on images, `aria-label` on icon buttons
-- [x] Footer social placeholders replaced with inline SVG logos
-- [x] Mobile navigation rebuilt into a single generated drawer so primary,
-      secondary, and dropdown links do not overlap
-- [x] Carousel dot styling now highlights only the active dot
-
-### Docs
-- [x] `ASSETS.md` documenting every external image and a per-page
-      replacement plan
-- [x] `assets/img/` and `assets/video/` directories created
-- [x] `AGENTS.md` updated with full session log
+### QA (Phase 13, partial)
+- [x] All 21 HTML pages return 200 over `python -m http.server 3000`
+- [x] CSS, JS, backend SQL, and docs files all serve 200
+- [x] No "ACCESSORIES" copy left in `store.html`
+- [x] No "Official handle pending" copy left in `index.html` or
+      `locations.html`
+- [x] No "Patrons: ... photo" copy left in `index.html`
+- [x] Roster shows 6 `dancer-profile.html?id=` links
+- [x] All 5 Atlanta IG handles render in the carousel
+- [x] All 4 inquiry pages load Supabase scripts
+- [x] `signup.html` loads Supabase scripts
+- [ ] **Manual browser QA** — pending real Supabase project (see below)
 
 ---
 
 ## Remaining Work
 
-Grouped by what kind of input each item needs.
-
-### A. Concrete dev work (no external dependencies)
-These can be implemented immediately by an AI/human developer in the repo.
-
-- [ ] **Browser QA pass** — open every page at desktop / tablet / mobile
-      breakpoints, click every link, submit every form, exercise the
-      carousel + dropdown + map, fix anything visibly broken.
-      *(Static checks were run on 2026-05-06; full manual/browser QA is
-      still needed because headless Chrome was blocked in this environment.)*
-- [ ] **Wire forms to a real backend** — Formspree, Netlify Forms, or a
-      custom endpoint. The frontend is Formspree-ready, but real Formspree
-      endpoint IDs still need to be created and added to `js/main.js`;
-      until then no submissions reach anyone.
-- [ ] **Add web analytics** — Google Analytics 4, Plausible, or Fathom
-      snippet site-wide.
-- [ ] **Replace dancer roster placeholder photos** — same Unsplash image
-      is repeated 6 times on `dancers.html`.
-- [ ] **Add hero / feature imagery** to `for-dancers.html`,
-      `for-club-owners.html`, `for-patrons.html`, `blog.html`,
-      `store.html`, `payment-processing.html`, and `about.html` (team
-      headshots) — see `ASSETS.md`.
+### A. Concrete dev work
+- [ ] Verify the full registration flow against a live Supabase project:
+      sign up as patron, dancer, and owner; confirm rows in `profiles`
+      + role-specific tables; confirm dashboard renders.
+- [ ] Verify booking end-to-end: sample_patron books sample_dancer,
+      both dashboards reflect the request, dancer accepts/declines.
+- [ ] Replace dancer roster placeholder photos and add hero / feature
+      imagery (see `ASSETS.md`).
+- [ ] Add web analytics (GA4, Plausible, or Fathom).
+- [ ] Profile / venue photo upload via Supabase Storage (the schema is
+      ready; add UI + bucket policies).
 
 ### B. Stakeholder / research input
-These need someone (June, Wes, or Peggy) to confirm or supply values.
-
-- [ ] **Atlanta venue Instagram / website handles** — verify and replace
-      every "Official handle pending" on `index.html` (carousel) and
-      `locations.html` (venue cards).
-- [ ] **App Store / Google Play URLs** — once apps are published, set
-      `APP_STORE_URL` and `GOOGLE_PLAY_URL` at the top of `js/main.js`.
+- [ ] **App Store / Google Play URLs** — set `APP_STORE_URL` and
+      `GOOGLE_PLAY_URL` at the top of `js/main.js` once published.
 - [ ] **Pricing values** — confirm or replace $99 / $249 / $499.
-- [ ] **xxxotic social media URLs** — footer icons currently route to `#`.
+- [ ] **xxxotic social media URLs** — footer SVG icons currently route
+      to `#`.
 - [ ] **Mailing address** for `terms.html` / `privacy.html`.
-- [ ] **National Human Trafficking Hotline** — current "Get Help" button
-      opens a search; replace with a verified hotline number/URL if
-      desired.
-- [ ] **Real venue permission** before using venue photography on
-      `locations.html`.
+- [ ] **National Human Trafficking Hotline** — current "Get Help"
+      button opens a search; replace with a verified hotline number/URL
+      if desired.
+- [ ] **Real venue partnership confirmations** before using venue
+      photography on `locations.html`.
 - [ ] **Real performer permission + signed model release** before using
       named performer photography on `dancers.html`.
 
 ### C. External services / governance
+- [ ] **Create the Supabase project** and apply
+      `backend/supabase-schema.sql` and `backend/seed.sql`.
+- [ ] **Create sample auth users** per `docs/testing-users.md`.
+- [ ] **Paste real Supabase URL + anon key into `js/config.js`.**
 - [ ] **Legal review** of `terms.html` and `privacy.html`.
-- [ ] **Set up form backend account** (Formspree free plan or Netlify
-      Forms — pick one before A.2).
-- [ ] **Set up analytics account** before A.3.
+- [ ] **Set up form-mail forwarding** in Supabase (or webhook -> email).
+- [ ] **Add Storage buckets**: `dancer-photos`, `venue-photos`,
+      `event-photos` with appropriate policies.
 - [ ] **Deploy to GoDaddy** static hosting.
-- [ ] **DNS + SSL** — confirm the domain is pointed at GoDaddy hosting
-      with a valid certificate.
+- [ ] **DNS + SSL** — confirm domain points at GoDaddy hosting with a
+      valid certificate.
 
 ### Issues
-<a id="issues"></a>
-
-1. Footer social icons now use inline SVG logos, but the links still point
-   to `#` until verified xxxotic social URLs are supplied.
-2. The `feature-icon` Unicode glyphs render with mixed widths across OSes.
-   In a polish pass, replace with consistent inline SVGs.
+- The `feature-icon` Unicode glyphs render with mixed widths across
+  OSes. Replace with consistent inline SVGs in a polish pass.
+- Footer social SVGs are in place but the links still point to `#`
+  until verified xxxotic social URLs are supplied.
 
 ---
 
@@ -234,7 +225,9 @@ These need someone (June, Wes, or Peggy) to confirm or supply values.
 - HTML5 (semantic, no build step)
 - CSS3 (custom properties, grid + flexbox, `clamp()` typography, no
   framework)
-- Vanilla JavaScript, zero dependencies
+- Vanilla JavaScript, zero npm dependencies
+- Supabase (Postgres + Auth + Storage), loaded via `@supabase/supabase-js@2`
+  CDN script
 - Google Fonts: Montserrat + Pacifico
 - Maps: public Google Maps embed URL (no API key)
 
@@ -242,180 +235,75 @@ These need someone (June, Wes, or Peggy) to confirm or supply values.
 
 ## Session Log
 
-### 2026-05-06 — Full marketing site build
+### 2026-05-07 — Registration / booking MVP
 
-- **Updated** `index.html`:
-  - Section IDs `for-barbers` / `for-clients` → `for-dancers` / `for-patrons`
-  - Hero "START TODAY" → `signup.html`; store chips → `download.html`
-  - "HOW … WORKS" CTAs → respective audience pages
-  - Both "START FREE" buttons → `signup.html`
-  - Carousel → Atlanta venues with "Official handle pending"
-  - Footer rebalanced; removed Careers / Reviews / New Releases / Case
-    Studies / Tax Prep / Service & Policy Calculators
-  - Header + footer logos now link to `index.html`
-- **Updated** `dancers.html`: matching nav + footer, BOOK buttons go to
-  `signup.html?role=patron`, added closing CTA section.
-- **Created**: `for-dancers.html`, `for-club-owners.html`, `for-patrons.html`,
-  `signup.html`, `pricing.html`, `locations.html`, `help.html`,
-  `download.html`, `store.html`, `blog.html`, `payment-processing.html`,
-  `about.html`, `brand-ambassador.html`, `terms.html`, `privacy.html`.
-- **Rewrote** `js/main.js` with: store URL constants, active-nav highlight,
-  keyboard-accessible dropdown, carousel (with dots, keyboard, pause on
-  hover), signup role selector w/ owner-only fields, static-form validation
-  + success messaging, locations map search, "Get Help" button.
-- **Extended** `css/styles.css` with v1.1 component styles (page hero,
-  feature grid, pricing, forms, FAQ, safety callout, map, venue grid, blog,
-  download, team, legal, focus states, responsive overrides).
-- **Created** `ASSETS.md` documenting image sources and a replacement plan.
-- **Created** `assets/img/` directory.
-- **Created** `NEXT_PROMPT.md` for the upcoming Browser QA + form-backend
-  activity.
-
-### 2026-05-06 — Homepage hero video
-
-- **Updated** `index.html`:
-  - Replaced the hero media placeholder and decorative play button with a
-    semantic `<video>` element.
-  - Added `autoplay`, `muted`, `loop`, `playsinline`, `preload="metadata"`,
-    and a local poster image.
-- **Updated** `css/styles.css`:
-  - Added `.hero-media-card`, `.hero-video`, and `.hero-video-overlay`
-    styles to keep the video embedded in the existing rounded hero card.
-  - Added mobile min-height tuning and reduced-motion CSS support.
-- **Updated** `js/main.js`:
-  - Added reduced-motion handling to pause the hero video and remove
-    autoplay when the user's OS requests reduced motion.
-- **Added** `assets/video/hero-bottle-service-loop.mp4`:
-  - Source: Pexels video "DJ performing in the night club" by Yashar Basir.
-  - Local 720p MP4 selected as a legally clean nightclub / DJ performance
-    clip.
-- **Added** `assets/img/hero-bottle-service-poster.jpg`:
-  - Source: Pexels video thumbnail for "DJ performing in the night club" by
-    Yashar Basir.
-  - Local poster image for loading and reduced-motion state.
-- **Updated** `ASSETS.md` with source, creator, license, date accessed, and
-  optimization notes.
-- **Verified**:
-  - Homepage HTML contains the expected autoplay/muted/loop/playsinline
-    video attributes and local MP4/poster paths.
-  - Local static server returns the homepage, MP4, and JPG assets.
-- **Note**:
-  - No WebM was generated because no local video transcoder was available
-    in the workspace.
-  - The clip is not Atlanta-specific and does not show literal bottle girls
-    delivering service to a club section.
-
-### 2026-05-06 — QA polish + Formspree-ready forms
-
-- **Updated** `css/styles.css`:
-  - Replaced footer social text treatment with SVG icon sizing.
-  - Added `.form-error` state styles.
-  - Reworked mobile menu CSS for a single generated drawer.
-  - Removed the always-active first carousel dot styling so only
-    `.is-active` is highlighted.
-- **Updated** `js/main.js`:
-  - Added `FORMSPREE_ENDPOINTS` config placeholders for all five forms.
-  - Added Formspree-compatible `fetch()` submission after client-side
-    validation when endpoints are configured.
-  - Improved form validation to catch non-empty optional email / phone
-    format issues, not just required fields.
-  - Generated a mobile nav drawer from the existing desktop nav so dropdown
-    expansion does not overlap secondary links.
+- **Created** `js/config.js`, `js/api.js`, `js/auth.js` for the Supabase
+  integration. `auth.signUpWithProfile` performs the full role-aware
+  signup in one call (auth user -> base profile -> role profile).
+- **Created** `backend/supabase-schema.sql` with 9 tables, RLS policies
+  for every role, and an `updated_at` trigger function.
+- **Created** `backend/seed.sql` with featured Atlanta venues and
+  guarded sample-profile inserts.
+- **Created** `backend/README.md` and `docs/testing-users.md`.
+- **Created** `login.html`, `dashboard.html` (role-routed),
+  `dancer-profile.html` (slug + id lookup, Web Share, booking form),
+  `edit-profile.html` (per role).
+- **Updated** `signup.html` to be Supabase-backed: role-aware fields,
+  password + confirm, plan capture (`?plan=`), success redirect.
+- **Updated** `js/main.js` so the static-form handler submits inquiries
+  to Supabase when configured, with Formspree as fallback.
 - **Updated** `for-dancers.html`, `for-club-owners.html`,
-  `for-patrons.html`, `signup.html`, and `brand-ambassador.html`:
-  - Added `_subject`, `_form_source`, and `_gotcha` fields.
-  - Added `.form-error` messages.
-  - Replaced backend-not-connected notices with privacy notes.
-- **Updated** every HTML footer:
-  - Replaced `YT / X / FB / IG / TT` text glyphs with inline SVG logos.
-- **Updated** `index.html`:
-  - Changed "HOW CLIENTS BOOK" to "HOW PATRONS BOOK".
-- **Updated** `ASSETS.md` and `NEXT_PROMPT.md`.
-- **Verified** via `http://localhost:3000` static checks:
-  - All 17 HTML pages returned HTTP 200.
-  - Local link targets resolved.
-  - All 5 forms include success, error, subject, source, and honeypot fields.
-  - All 17 footers include SVG social icons.
-  - Old backend warning copy and old social text glyphs are gone.
-- **Blocked**:
-  - Could not verify real Formspree POSTs because endpoint IDs were not
-    available.
-  - Could not complete automated headless-browser visual QA because Chrome
-    headless screenshot/CDP startup was blocked by local access restrictions;
-    manual browser QA is still required.
+  `for-patrons.html`, `brand-ambassador.html` to load Supabase + config
+  + api scripts.
+- **Updated** `locations.html`: replaced "Official handle pending" with
+  real Atlanta IG links, switched "View on Map" anchors to
+  `data-map-query` buttons that update the iframe in-place, added live
+  Supabase featured-venues feed (with the static cards as fallback).
+- **Updated** `index.html`: carousel now shows real Atlanta IG handles;
+  homepage 3-step "CREATE YOUR PROFILE" copy updated for dancers/owners
+  /patrons.
+- **Updated** `dancers.html`: 6 BOOK buttons now link to
+  `dancer-profile.html?id={daisy|tina|onyx|icy|star|lucy}`.
+- **Updated** `store.html`: removed ACCESSORIES card, switched grid to
+  `feature-grid feature-grid-3` for a balanced 3-up layout.
+- **Updated** `css/styles.css` with v1.2 styles: config-banner,
+  plan-banner, dashboard layout, booking pills, info grid, profile
+  sections, booking gate, role-badge variants, store 3-grid override,
+  venue social link.
+- **Updated** `README.md` with full Mermaid diagram, every data flow,
+  project structure, data model, GoDaddy deploy notes, and security
+  guidance.
+- **Verified** via `http://localhost:3000`: all 21 HTML pages return
+  200; CSS/JS/backend assets serve; no leftover "ACCESSORIES",
+  "Official handle pending", or "Patrons: ... photo" copy; 5 Atlanta
+  IG handles render in carousel; 6 dancer-profile links on roster;
+  all 5 forms (signup + 4 inquiries) load Supabase scripts.
+- **Blocked**: Manual browser QA against a live Supabase project
+  hasn't been run because no Supabase credentials are wired yet.
 
-### 2026-05-07 — Homepage hero video replacement
+### 2026-05-06 — Full marketing site build + QA polish
 
-- **Replaced** `assets/video/hero-bottle-service-loop.mp4`:
-  - Source: Pexels video "DJ performing in the night club" by Yashar Basir.
-  - 18-second 720p MP4, under 10 MB, selected by the project owner for a
-    stronger DJ / nightclub / crowd-energy feel.
-- **Replaced** `assets/img/hero-bottle-service-poster.jpg`:
-  - Source: Pexels video thumbnail for the same video.
-- **Kept** the existing homepage implementation in `index.html`:
-  - Same local asset paths.
-  - Same `autoplay`, `muted`, `loop`, `playsinline`, and
-    `preload="metadata"` behavior.
-- **Updated** `ASSETS.md` and `NEXT_PROMPT.md` to reference the new source.
-- **Verified**:
-  - `http://localhost:3000/index.html` returns 200.
-  - Local MP4 and poster asset URLs return 200.
-- **Note**:
-  - The replacement is still not Atlanta-specific and does not show literal
-    bottle girls delivering service to a club section.
-
-### 2026-05-07 — Pricing plan selector
-
-- **Updated** `pricing.html`:
-  - Added selectable plan metadata, radio semantics, plan-specific signup
-    URLs, and default selected state on Growth.
-- **Updated** `css/styles.css`:
-  - Moved the purple ring / shadow / highlighted background treatment to
-    `.pricing-card.is-selected` so any plan can receive it.
-  - Added hover and focus-visible treatment for selectable pricing cards.
-- **Updated** `js/main.js`:
-  - Added click, Enter/Space, and Arrow key handling to move selected state
-    between Starter, Growth, and Premium.
-  - Selected card CTA switches to the primary light button treatment while
-    non-selected cards use outline buttons.
-- **Verified**:
-  - `http://localhost:3000/pricing.html` returns 200.
-  - Pricing markup includes radiogroup/card state attributes and
-    plan-specific signup URLs.
-
-### 2026-05-07 — Locations venue map buttons
-
-- **Updated** `locations.html`:
-  - Replaced per-venue Google Maps embed links with in-page `View on Map`
-    buttons using `data-map-query`.
-- **Updated** `js/main.js`:
-  - Added shared `updateMap()` helper for the locations map.
-  - Venue buttons now update the existing map iframe and scroll users back
-    to the map instead of opening Google's iframe-only embed URL in a new
-    tab.
-- **Verified**:
-  - `http://localhost:3000/locations.html` returns 200.
-  - Venue buttons no longer contain `target="_blank"` embed links.
+- 15 new HTML pages, shared nav/footer, 5 Formspree-ready forms, SVG
+  social icons, mobile drawer, carousel polish, full v1.1 CSS pass,
+  drafts of Terms + Privacy. (See prior session log entry.)
 
 ### 2026-05-05 — Earlier session
 
-- Started Python HTTP server for local dev
-- Added Lucy dancer card to `dancers.html`
-- Created original AGENTS.md
+- Added Lucy dancer card; created original AGENTS.md.
 
 ---
 
 ## Suggested commit message
 
 ```
-Build out functional xxxotic marketing site pages and navigation
+Build registration backend, role dashboards, and booking MVP
 ```
 
 ---
 
 ## Instructions for Agents
 
-> After every meaningful session in this project, update this file:
+> After every meaningful session in this project:
 > 1. Update **Last Updated** at the top.
 > 2. Move items from **Remaining Work** to **Done So Far** as they ship.
 > 3. Add a dated session-log entry with files changed + summary.

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>xxxotic | Brand Ambassador</title>
-  <meta name="description" content="Become an xxxotic brand ambassador. Help introduce the platform to dancers, club owners, patrons, and nightlife communities." />
+  <title>xxxotic | Log In</title>
+  <meta name="description" content="Log in to your xxxotic account." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pacifico&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body class="body active" data-page="brand-ambassador">
+<body class="body active" data-page="login">
 
   <header class="global-nav" id="globalNav">
     <div class="nav-inner">
@@ -40,59 +40,42 @@
     </div>
   </header>
 
-  <main class="main">
+  <main class="main" id="loginMain">
 
     <section class="page-hero section center">
       <div class="bg-pattern" aria-hidden="true"></div>
       <div class="container narrow">
-        <h1 class="display xl">BRAND AMBASSADOR</h1>
-        <p class="lede">Ambassadors help introduce xxxotic to dancers, club owners, patrons, and nightlife communities. If you've got the network and the energy, we want to hear from you.</p>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="feature-grid">
-          <article class="feature-card"><span class="feature-icon" aria-hidden="true">&#128640;</span><h3>EARLY PLATFORM ACCESS</h3><p>Use new features before public launch and shape what ships next.</p></article>
-          <article class="feature-card"><span class="feature-icon" aria-hidden="true">&#127757;</span><h3>COMMUNITY GROWTH</h3><p>Help build the xxxotic community in your city, your venues, your scene.</p></article>
-          <article class="feature-card"><span class="feature-icon" aria-hidden="true">&#127881;</span><h3>EVENT PROMOTION</h3><p>Co-host launches, takeovers, and themed nights with our marketing team.</p></article>
-          <article class="feature-card"><span class="feature-icon" aria-hidden="true">&#128226;</span><h3>BRAND VISIBILITY</h3><p>Get featured across our channels &mdash; we put real spotlight on real ambassadors.</p></article>
-        </div>
+        <h1 class="display xl">LOG IN</h1>
+        <p class="lede">Welcome back. Pick up where you left off.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container narrow">
-        <div class="form-card">
-          <h2 class="display">APPLY NOW</h2>
-          <p class="muted">Tell us about you and why you'd be a fit.</p>
-          <p class="form-note">We'll only use your info to follow up about xxxotic. See our <a href="privacy.html">Privacy Policy</a>.</p>
+        <div class="form-card form-card-narrow">
+          <h2 class="display">SIGN IN</h2>
+          <p class="muted">No account yet? <a href="signup.html">Create one</a>.</p>
 
-          <form class="static-form" data-form="ambassador" novalidate>
-            <input type="hidden" name="_subject" value="xxxotic - Brand ambassador application" />
-            <input type="hidden" name="_form_source" value="brand-ambassador.html" />
-            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none" />
+          <form class="auth-form" id="loginForm" data-auth-form="login" novalidate>
             <div class="form-row">
-              <div class="form-field"><label for="a-name">Name</label><input id="a-name" name="name" type="text" required autocomplete="name" /></div>
+              <div class="form-field">
+                <label for="l-email">Email</label>
+                <input id="l-email" name="email" type="email" required autocomplete="email" />
+              </div>
             </div>
             <div class="form-row">
-              <div class="form-field"><label for="a-phone">Phone</label><input id="a-phone" name="phone" type="tel" required /></div>
-              <div class="form-field"><label for="a-email">Email</label><input id="a-email" name="email" type="email" required /></div>
+              <div class="form-field">
+                <label for="l-pw">Password</label>
+                <input id="l-pw" name="password" type="password" required autocomplete="current-password" minlength="8" />
+              </div>
             </div>
-            <div class="form-row">
-              <div class="form-field"><label for="a-city">City</label><input id="a-city" name="city" type="text" required /></div>
-              <div class="form-field"><label for="a-state">State</label><input id="a-state" name="state" type="text" required /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-field"><label for="a-ig">Instagram handle</label><input id="a-ig" name="instagram" type="text" placeholder="@yourhandle" /></div>
-            </div>
-            <div class="form-row">
-              <div class="form-field"><label for="a-why">Why do you want to be an ambassador?</label><textarea id="a-why" name="why" rows="5" required></textarea></div>
-            </div>
-            <button type="submit" class="btn btn-light">APPLY NOW</button>
-            <p class="form-success" hidden role="status">Thanks &mdash; your application was submitted.</p>
-            <p class="form-error" hidden role="alert">Something went wrong. Please try again in a moment.</p>
+
+            <button type="submit" class="btn btn-light xl" id="loginSubmit">LOG IN</button>
+            <p class="form-success" hidden role="status">Signed in. Redirecting&hellip;</p>
+            <p class="form-error" hidden role="alert">Login failed.</p>
           </form>
+
+          <p class="muted small">By logging in, you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</p>
         </div>
       </div>
     </section>
@@ -129,6 +112,60 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var auth = window.xxxoticAuth;
+    var form = document.getElementById("loginForm");
+    if (!form) return;
+    var success = form.querySelector(".form-success");
+    var error = form.querySelector(".form-error");
+    var submit = document.getElementById("loginSubmit");
+
+    if (auth) auth.renderConfigBanner("loginMain");
+
+    function setError(msg) {
+      if (!error) return;
+      error.textContent = msg;
+      error.hidden = false;
+      if (success) success.hidden = true;
+    }
+    function clearStatus() {
+      if (error) error.hidden = true;
+      if (success) success.hidden = true;
+    }
+
+    // If already logged in, send straight to dashboard
+    (async function () {
+      if (auth && auth.isConfigured()) {
+        var u = await auth.getCurrentUser();
+        if (u) window.location.href = "dashboard.html";
+      }
+    })();
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      clearStatus();
+      var email = document.getElementById("l-email").value.trim();
+      var pw = document.getElementById("l-pw").value;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setError("Enter a valid email.");
+      if (!pw) return setError("Password is required.");
+      if (!auth || !auth.isConfigured()) {
+        return setError("Backend not configured. Set Supabase credentials in js/config.js.");
+      }
+
+      submit.disabled = true;
+      submit.textContent = "SIGNING IN…";
+      var res = await auth.signIn(email, pw);
+      submit.disabled = false;
+      submit.textContent = "LOG IN";
+      if (res.error) return setError(res.error.message || "Login failed.");
+      if (success) success.hidden = false;
+      window.setTimeout(function () { window.location.href = "dashboard.html"; }, 500);
+    });
+  })();
+  </script>
 </body>
 </html>

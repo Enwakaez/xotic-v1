@@ -40,13 +40,14 @@
     </div>
   </header>
 
-  <main class="main">
+  <main class="main" id="signupMain">
 
     <section class="page-hero section center">
       <div class="bg-pattern" aria-hidden="true"></div>
       <div class="container narrow">
         <h1 class="display xl">START WITH XXXOTIC</h1>
         <p class="lede">Create your account and choose how you want to use the platform.</p>
+        <p class="muted">Already have an account? <a href="login.html">Log in</a>.</p>
       </div>
     </section>
 
@@ -78,47 +79,102 @@
     <section class="section">
       <div class="container narrow">
         <div class="form-card">
+          <p class="plan-banner" id="planBanner" hidden></p>
           <h2 class="display" id="signupTitle">CREATE YOUR ACCOUNT</h2>
-          <p class="muted" id="signupSubtitle">All accounts need your name, phone, and email.</p>
+          <p class="muted" id="signupSubtitle">All accounts need your name, phone, email, and a password.</p>
           <p class="form-note">We'll only use your info to follow up about xxxotic. See our <a href="privacy.html">Privacy Policy</a>.</p>
 
-          <form class="static-form" id="signupForm" data-form="signup" novalidate>
+          <form class="auth-form" id="signupForm" data-auth-form="signup" novalidate>
             <input type="hidden" name="role" id="signupRole" value="" />
-            <input type="hidden" name="_subject" value="xxxotic - Sign up" />
-            <input type="hidden" name="_form_source" value="signup.html" />
-            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none" />
+            <input type="hidden" name="plan" id="signupPlan" value="" />
 
+            <!-- Universal fields -->
             <div class="form-row">
-              <div class="form-field"><label for="s-first">First name</label><input id="s-first" name="firstName" type="text" required autocomplete="given-name" /></div>
-              <div class="form-field"><label for="s-last">Last name</label><input id="s-last" name="lastName" type="text" required autocomplete="family-name" /></div>
+              <div class="form-field">
+                <label for="s-first">First name</label>
+                <input id="s-first" name="firstName" type="text" required autocomplete="given-name" />
+              </div>
+              <div class="form-field">
+                <label for="s-last">Last name</label>
+                <input id="s-last" name="lastName" type="text" required autocomplete="family-name" />
+              </div>
             </div>
             <div class="form-row">
-              <div class="form-field"><label for="s-phone">Phone number</label><input id="s-phone" name="phone" type="tel" required autocomplete="tel" /></div>
-              <div class="form-field"><label for="s-email">Email address</label><input id="s-email" name="email" type="email" required autocomplete="email" /></div>
+              <div class="form-field">
+                <label for="s-phone">Phone number</label>
+                <input id="s-phone" name="phone" type="tel" required autocomplete="tel" />
+              </div>
+              <div class="form-field">
+                <label for="s-email">Email address</label>
+                <input id="s-email" name="email" type="email" required autocomplete="email" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="s-pw">Password</label>
+                <input id="s-pw" name="password" type="password" required autocomplete="new-password" minlength="8" />
+              </div>
+              <div class="form-field">
+                <label for="s-pw2">Confirm password</label>
+                <input id="s-pw2" name="passwordConfirm" type="password" required autocomplete="new-password" minlength="8" />
+              </div>
             </div>
 
-            <div class="form-row owner-only" hidden>
-              <div class="form-field"><label for="s-club">Club or lounge name</label><input id="s-club" name="clubName" type="text" /></div>
-            </div>
-            <div class="form-row owner-only" hidden>
-              <div class="form-field"><label for="s-baddr">Business address</label><input id="s-baddr" name="businessAddress" type="text" /></div>
-            </div>
-            <div class="form-row owner-only" hidden>
-              <div class="form-field"><label for="s-bphone">Business phone</label><input id="s-bphone" name="businessPhone" type="tel" /></div>
-              <div class="form-field"><label for="s-bemail">Business email</label><input id="s-bemail" name="businessEmail" type="email" /></div>
+            <!-- Dancer-only optional rows -->
+            <div class="form-row dancer-only" hidden>
+              <div class="form-field">
+                <label for="s-stage">Stage name <span class="muted small">(optional)</span></label>
+                <input id="s-stage" name="stageName" type="text" autocomplete="off" />
+              </div>
             </div>
 
-            <button type="submit" class="btn btn-light xl">CREATE ACCOUNT</button>
-            <p class="form-success" hidden role="status">Thanks &mdash; your signup was submitted.</p>
+            <!-- Patron + dancer optional location -->
+            <div class="form-row pd-only" hidden>
+              <div class="form-field">
+                <label for="s-city">City <span class="muted small">(optional)</span></label>
+                <input id="s-city" name="city" type="text" autocomplete="address-level2" />
+              </div>
+              <div class="form-field">
+                <label for="s-state">State <span class="muted small">(optional)</span></label>
+                <input id="s-state" name="state" type="text" autocomplete="address-level1" />
+              </div>
+            </div>
+
+            <!-- Owner-only required rows -->
+            <div class="form-row owner-only" hidden>
+              <div class="form-field">
+                <label for="s-club">Club or lounge name</label>
+                <input id="s-club" name="clubName" type="text" />
+              </div>
+            </div>
+            <div class="form-row owner-only" hidden>
+              <div class="form-field">
+                <label for="s-baddr">Business address</label>
+                <input id="s-baddr" name="businessAddress" type="text" />
+              </div>
+            </div>
+            <div class="form-row owner-only" hidden>
+              <div class="form-field">
+                <label for="s-bphone">Business phone</label>
+                <input id="s-bphone" name="businessPhone" type="tel" />
+              </div>
+              <div class="form-field">
+                <label for="s-bemail">Business email</label>
+                <input id="s-bemail" name="businessEmail" type="email" />
+              </div>
+            </div>
+            <div class="form-row owner-only" hidden>
+              <div class="form-field">
+                <label for="s-web">Website or Instagram <span class="muted small">(optional)</span></label>
+                <input id="s-web" name="website" type="text" placeholder="https:// or @handle" />
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-light xl" id="signupSubmit">CREATE ACCOUNT</button>
+            <p class="form-success" hidden role="status">Account created. Redirecting to your dashboard&hellip;</p>
             <p class="form-error" hidden role="alert">Something went wrong. Please try again in a moment.</p>
           </form>
         </div>
-      </div>
-    </section>
-
-    <section class="section center">
-      <div class="container narrow">
-        <p class="muted">Already have an app preview? <a href="download.html">Download xxxotic</a> or <a href="help.html">learn how it works</a>.</p>
       </div>
     </section>
 
@@ -151,6 +207,172 @@
     </div>
   </footer>
 
+  <!-- Supabase + xxxotic JS layer -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var auth = window.xxxoticAuth;
+    var ui = {
+      form: document.getElementById("signupForm"),
+      title: document.getElementById("signupTitle"),
+      subtitle: document.getElementById("signupSubtitle"),
+      roleInput: document.getElementById("signupRole"),
+      planInput: document.getElementById("signupPlan"),
+      planBanner: document.getElementById("planBanner"),
+      success: null,
+      error: null,
+      grid: document.getElementById("roleGrid"),
+      submit: document.getElementById("signupSubmit")
+    };
+    if (!ui.form) return;
+    ui.success = ui.form.querySelector(".form-success");
+    ui.error = ui.form.querySelector(".form-error");
+
+    var TITLES = {
+      dancer: { title: "JOIN AS A DANCER", sub: "Manage your bookings, share availability, and grow your client base." },
+      owner:  { title: "JOIN AS A CLUB OWNER", sub: "Add your venue details so we can connect dancers and patrons to your room." },
+      patron: { title: "JOIN AS A PATRON", sub: "Plan your night and book entertainment, sections, and bottles before you arrive." }
+    };
+    var PLAN_LABELS = { starter: "Starter ($99/mo)", growth: "Growth ($249/mo)", premium: "Premium ($499/mo)" };
+
+    function applyRole(role) {
+      if (!TITLES[role]) return;
+      ui.roleInput.value = role;
+      ui.title.textContent = TITLES[role].title;
+      ui.subtitle.textContent = TITLES[role].sub;
+
+      // Toggle conditional rows
+      document.querySelectorAll(".dancer-only").forEach(function (r) { r.hidden = role !== "dancer"; });
+      document.querySelectorAll(".pd-only").forEach(function (r) { r.hidden = role === "owner"; });
+      document.querySelectorAll(".owner-only").forEach(function (r) {
+        r.hidden = role !== "owner";
+        r.querySelectorAll("input, select, textarea").forEach(function (i) { i.required = role === "owner"; });
+      });
+
+      // Selected card visual
+      if (ui.grid) {
+        ui.grid.querySelectorAll(".role-card").forEach(function (c) {
+          c.classList.toggle("selected", c.dataset.role === role);
+        });
+      }
+
+      // Plan banner only for owner
+      var plan = ui.planInput.value;
+      if (role === "owner" && plan && PLAN_LABELS[plan]) {
+        ui.planBanner.textContent = "Selected plan: " + PLAN_LABELS[plan];
+        ui.planBanner.hidden = false;
+      } else {
+        ui.planBanner.hidden = true;
+      }
+    }
+
+    function applyPlan(plan) {
+      if (!plan || !PLAN_LABELS[plan]) return;
+      ui.planInput.value = plan;
+    }
+
+    // Read URL params
+    var params = new URLSearchParams(window.location.search);
+    var initialRole = params.get("role");
+    var initialPlan = params.get("plan");
+    if (initialPlan) applyPlan(initialPlan);
+    if (initialRole) applyRole(initialRole);
+
+    // Role card clicks
+    if (ui.grid) {
+      ui.grid.addEventListener("click", function (e) {
+        var card = e.target.closest(".role-card");
+        if (!card) return;
+        applyRole(card.dataset.role);
+        ui.form.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    // Render config banner if Supabase isn't wired yet
+    if (auth) auth.renderConfigBanner("signupMain");
+
+    // -------- Submit handler --------
+    function setError(msg) {
+      if (!ui.error) return;
+      ui.error.textContent = msg;
+      ui.error.hidden = false;
+      if (ui.success) ui.success.hidden = true;
+    }
+    function clearStatus() {
+      if (ui.error) ui.error.hidden = true;
+      if (ui.success) ui.success.hidden = true;
+    }
+
+    ui.form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      clearStatus();
+
+      var role = ui.roleInput.value;
+      if (!role) { setError("Please choose a role first."); return; }
+
+      var v = function (id) { return (document.getElementById(id).value || "").trim(); };
+      var pw = document.getElementById("s-pw").value;
+      var pw2 = document.getElementById("s-pw2").value;
+
+      // -------- Validation --------
+      if (!v("s-first")) return setError("First name is required.");
+      if (!v("s-last")) return setError("Last name is required.");
+      if (!v("s-phone")) return setError("Phone number is required.");
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("s-email"))) return setError("Enter a valid email.");
+      if (!pw || pw.length < 8) return setError("Password must be at least 8 characters.");
+      if (pw !== pw2) return setError("Passwords do not match.");
+
+      if (role === "owner") {
+        if (!v("s-club")) return setError("Club or lounge name is required.");
+        if (!v("s-baddr")) return setError("Business address is required.");
+        if (!v("s-bphone")) return setError("Business phone is required.");
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("s-bemail"))) return setError("Valid business email is required.");
+      }
+
+      if (!auth || !auth.isConfigured()) {
+        return setError("Backend not configured. Set Supabase credentials in js/config.js.");
+      }
+
+      ui.submit.disabled = true;
+      ui.submit.textContent = "CREATING…";
+
+      var payload = {
+        role: role,
+        email: v("s-email"),
+        password: pw,
+        first_name: v("s-first"),
+        last_name: v("s-last"),
+        phone: v("s-phone"),
+        city: v("s-city"),
+        state: v("s-state"),
+        stage_name: v("s-stage")
+      };
+      if (role === "owner") {
+        payload.club_name = v("s-club");
+        payload.business_address = v("s-baddr");
+        payload.business_phone = v("s-bphone");
+        payload.business_email = v("s-bemail");
+        payload.website_or_instagram = v("s-web");
+        payload.selected_plan = ui.planInput.value || null;
+      }
+
+      var res = await auth.signUpWithProfile(payload);
+
+      ui.submit.disabled = false;
+      ui.submit.textContent = "CREATE ACCOUNT";
+
+      if (res.error) {
+        return setError(res.error.message || "Sign up failed. Please try again.");
+      }
+      if (ui.success) ui.success.hidden = false;
+      window.setTimeout(function () { window.location.href = "dashboard.html"; }, 700);
+    });
+  })();
+  </script>
 </body>
 </html>

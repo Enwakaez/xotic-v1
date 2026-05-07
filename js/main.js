@@ -366,6 +366,44 @@
       return valid;
     }
 
+    function buildInquiryRow(form) {
+      var fd = new FormData(form);
+      var source = form.dataset.form || "unknown";
+      var name = "";
+      var first = (fd.get("firstName") || "").toString().trim();
+      var last = (fd.get("lastName") || "").toString().trim();
+      if (first || last) name = (first + " " + last).trim();
+      else name = (fd.get("name") || "").toString().trim();
+
+      var phone = (fd.get("phone") || fd.get("ownerPhone") || fd.get("clubPhone") || "").toString().trim();
+      var email = (fd.get("email") || fd.get("ownerEmail") || fd.get("clubEmail") || "").toString().trim();
+      var message = (fd.get("message") || fd.get("why") || fd.get("inquiry") || "").toString().trim();
+
+      // Stuff everything else into metadata so we don't lose anything.
+      var metadata = {};
+      var skip = { _gotcha: 1, _subject: 1, _form_source: 1, password: 1, passwordConfirm: 1 };
+      fd.forEach(function (val, key) {
+        if (skip[key]) return;
+        metadata[key] = val;
+      });
+
+      // Map source -> role hint where it's obvious.
+      var role = null;
+      if (source === "dancer-apply") role = "dancer";
+      else if (source === "owner-inquiry") role = "owner";
+      else if (source === "patron-waitlist") role = "patron";
+
+      return {
+        source: source,
+        role: role,
+        name: name || null,
+        phone: phone || null,
+        email: email || null,
+        message: message || null,
+        metadata: metadata
+      };
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var ok = true;
@@ -384,10 +422,31 @@
         return;
       }
 
+      // Preferred path: Supabase inquiries table
+      var cfg = window.xxxoticConfig;
+      var api = window.xxxoticApi;
+      if (cfg && cfg.isConfigured && api && api.createInquiry) {
+        if (submit) submit.disabled = true;
+        api.createInquiry(buildInquiryRow(form)).then(function (res) {
+          if (submit) submit.disabled = false;
+          if (res.error) {
+            if (error) {
+              error.textContent = res.error.message || "Something went wrong. Please try again in a moment.";
+              error.hidden = false;
+            }
+            return;
+          }
+          if (success) success.hidden = false;
+          form.reset();
+        });
+        return;
+      }
+
+      // Fallback: Formspree (when an action URL is configured)
       var action = form.getAttribute("action");
       if (!action) {
         if (error) {
-          error.textContent = "This form is ready for Formspree, but its endpoint is not configured yet.";
+          error.textContent = "This form isn't connected yet. Configure Supabase in js/config.js or set a Formspree endpoint.";
           error.hidden = false;
         }
         return;

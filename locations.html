@@ -78,57 +78,57 @@
         <p class="muted">Verify current details with each venue before visiting. Listings below are launch-roster placeholders.</p>
 
         <div class="venue-grid">
-          <article class="venue-card">
+          <article class="venue-card" data-venue="magic-city">
             <h3>MAGIC CITY</h3>
             <p class="venue-meta">Atlanta, GA</p>
             <p class="venue-desc">Iconic Atlanta nightlife institution.</p>
-            <p class="muted small">Official handle pending verification.</p>
+            <p class="venue-social"><a href="https://www.instagram.com/magiccityatlanta/" target="_blank" rel="noopener noreferrer">@magiccityatlanta</a></p>
             <div class="venue-actions">
               <button class="btn btn-outline" type="button" data-map-query="Magic City Atlanta">View on Map</button>
               <a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>
             </div>
           </article>
 
-          <article class="venue-card">
+          <article class="venue-card" data-venue="blue-flame">
             <h3>BLUE FLAME</h3>
             <p class="venue-meta">Atlanta, GA</p>
             <p class="venue-desc">Long-standing nightlife destination.</p>
-            <p class="muted small">Official handle pending verification.</p>
+            <p class="venue-social"><a href="https://www.instagram.com/BlueFlameLounge" target="_blank" rel="noopener noreferrer">@BlueFlameLounge</a></p>
             <div class="venue-actions">
-              <button class="btn btn-outline" type="button" data-map-query="Blue Flame Atlanta">View on Map</button>
+              <button class="btn btn-outline" type="button" data-map-query="Blue Flame Lounge Atlanta">View on Map</button>
               <a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>
             </div>
           </article>
 
-          <article class="venue-card">
+          <article class="venue-card" data-venue="onyx-atlanta">
             <h3>ONYX ATLANTA</h3>
             <p class="venue-meta">Atlanta, GA</p>
             <p class="venue-desc">Premium ATL nightlife venue.</p>
-            <p class="muted small">Official handle pending verification.</p>
+            <p class="venue-social"><a href="https://www.instagram.com/onyx_atlanta" target="_blank" rel="noopener noreferrer">@onyx_atlanta</a></p>
             <div class="venue-actions">
               <button class="btn btn-outline" type="button" data-map-query="Onyx Atlanta">View on Map</button>
               <a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>
             </div>
           </article>
 
-          <article class="venue-card">
+          <article class="venue-card" data-venue="pin-ups">
             <h3>PIN UPS</h3>
             <p class="venue-meta">Atlanta, GA</p>
             <p class="venue-desc">Notable Atlanta entertainment venue.</p>
-            <p class="muted small">Official handle pending verification.</p>
+            <p class="venue-social"><a href="https://www.instagram.com/club_pinupsatl/" target="_blank" rel="noopener noreferrer">@club_pinupsatl</a></p>
             <div class="venue-actions">
               <button class="btn btn-outline" type="button" data-map-query="Pin Ups Atlanta">View on Map</button>
               <a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>
             </div>
           </article>
 
-          <article class="venue-card">
+          <article class="venue-card" data-venue="strokers">
             <h3>STROKERS</h3>
             <p class="venue-meta">Atlanta, GA</p>
             <p class="venue-desc">Established nightlife club.</p>
-            <p class="muted small">Official handle pending verification.</p>
+            <p class="venue-social"><a href="https://www.instagram.com/strokersclub" target="_blank" rel="noopener noreferrer">@strokersclub</a></p>
             <div class="venue-actions">
-              <button class="btn btn-outline" type="button" data-map-query="Strokers Atlanta">View on Map</button>
+              <button class="btn btn-outline" type="button" data-map-query="Strokers Club Atlanta">View on Map</button>
               <a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>
             </div>
           </article>
@@ -176,6 +176,65 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
   <script src="js/main.js"></script>
+  <script>
+  // "View on Map" buttons inside venue cards: update the embedded iframe
+  // in place rather than opening a new tab.
+  (function () {
+    "use strict";
+    var mapFrame = document.getElementById("mapFrame");
+    document.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-map-query]");
+      if (!btn || !mapFrame) return;
+      var q = btn.getAttribute("data-map-query");
+      mapFrame.src = "https://www.google.com/maps?q=" + encodeURIComponent(q) + "&output=embed";
+      mapFrame.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  })();
+  </script>
+  <script>
+  // Progressive enhancement: when Supabase is configured, replace the
+  // static venue cards with the live featured-venues feed.
+  (function () {
+    "use strict";
+    var cfg = window.xxxoticConfig;
+    var api = window.xxxoticApi;
+    if (!cfg || !cfg.isConfigured || !api) return;
+
+    function escapeHtml(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function cardHtml(v) {
+      return (
+        '<article class="venue-card" data-venue="' + escapeHtml((v.name || "").toLowerCase().replace(/\s+/g, "-")) + '">' +
+        '<h3>' + escapeHtml((v.name || "").toUpperCase()) + '</h3>' +
+        '<p class="venue-meta">' + escapeHtml((v.city || "") + (v.state ? ", " + v.state : "")) + '</p>' +
+        (v.address ? '<p class="venue-desc">' + escapeHtml(v.address) + '</p>' : '') +
+        (v.instagram_url
+          ? '<p class="venue-social"><a href="' + escapeHtml(v.instagram_url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(v.instagram_url.replace(/^https?:\/\/(www\.)?instagram\.com\//i, "@").replace(/\/$/, "")) + '</a></p>'
+          : '') +
+        '<div class="venue-actions">' +
+          '<button class="btn btn-outline" type="button" data-map-query="' + escapeHtml(v.map_query || v.name) + '">View on Map</button>' +
+          '<a class="btn btn-light" href="signup.html?role=patron">Explore Events</a>' +
+        '</div>' +
+        '</article>'
+      );
+    }
+
+    (async function () {
+      var grid = document.querySelector(".venue-grid");
+      if (!grid) return;
+      var res = await api.listFeaturedVenues();
+      if (res.error || !res.data || !res.data.length) return;
+      grid.innerHTML = res.data.map(cardHtml).join("");
+    })();
+  })();
+  </script>
 </body>
 </html>

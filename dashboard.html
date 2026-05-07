@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>xxxotic | Dashboard</title>
+  <meta name="description" content="Your xxxotic dashboard." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="body active" data-page="dashboard">
+
+  <header class="global-nav" id="globalNav">
+    <div class="nav-inner">
+      <nav class="nav-left" aria-label="Primary">
+        <a href="index.html" class="nav-link" data-nav="home">HOME</a>
+        <div class="nav-item has-dropdown">
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">FEATURES <span class="caret" aria-hidden="true">&#9662;</span></button>
+          <div class="dropdown-menu" role="menu">
+            <a href="for-dancers.html" role="menuitem">For Dancers</a>
+            <a href="for-club-owners.html" role="menuitem">For Club Owners</a>
+            <a href="for-patrons.html" role="menuitem">For Patrons</a>
+            <a href="dancers.html" role="menuitem">Meet the Roster</a>
+            <a href="payment-processing.html" role="menuitem">Payment Processing</a>
+          </div>
+        </div>
+        <a href="pricing.html" class="nav-link" data-nav="pricing">PRICING</a>
+        <a href="locations.html" class="nav-link" data-nav="locations">LOCATIONS</a>
+      </nav>
+      <a href="index.html" class="brand" aria-label="xxxotic home"><span class="brand-mark">xxx<em>otic</em></span></a>
+      <nav class="nav-right" aria-label="Secondary">
+        <a href="help.html" class="nav-link" data-nav="help">HELP &amp; RESOURCES</a>
+        <a href="blog.html" class="nav-link" data-nav="blog">BLOG</a>
+        <a href="store.html" class="nav-link" data-nav="store">STORE</a>
+        <a href="download.html" class="nav-link" data-nav="download">DOWNLOAD</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="main" id="dashboardMain">
+
+    <section class="page-hero section">
+      <div class="bg-pattern" aria-hidden="true"></div>
+      <div class="container">
+        <div class="dash-header">
+          <div>
+            <span class="role-badge" id="roleBadge">&hellip;</span>
+            <h1 class="display xl" id="dashTitle">DASHBOARD</h1>
+            <p class="lede" id="dashGreeting">Loading your account&hellip;</p>
+          </div>
+          <div class="dash-actions">
+            <a class="btn btn-outline" href="edit-profile.html">EDIT PROFILE</a>
+            <button class="btn btn-light" type="button" id="logoutBtn">LOG OUT</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Patron view -->
+    <section class="section role-view" id="patronView" hidden>
+      <div class="container">
+        <h2 class="display">PLAN YOUR NIGHT OUT</h2>
+        <p class="muted">Browse dancers, explore locations, and review your booking history.</p>
+
+        <div class="dash-grid">
+          <a class="dash-card" href="dancers.html"><span class="feature-icon" aria-hidden="true">&#127919;</span><h3>BROWSE THE ROSTER</h3><p>See featured dancers and book the vibe that fits your night.</p></a>
+          <a class="dash-card" href="locations.html"><span class="feature-icon" aria-hidden="true">&#128205;</span><h3>EXPLORE LOCATIONS</h3><p>Find venues and events on the live Atlanta map.</p></a>
+          <a class="dash-card" href="#patron-bookings"><span class="feature-icon" aria-hidden="true">&#128197;</span><h3>YOUR BOOKINGS</h3><p>Track your booking requests and their status.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="patronSearch" hidden>
+      <div class="container">
+        <h2 class="display">SEARCH DANCERS</h2>
+        <form id="patronSearchForm" class="map-search" role="search">
+          <label class="visually-hidden" for="patronQuery">Search by stage name, city, or service</label>
+          <input id="patronQuery" type="text" placeholder="Stage name, city, or service" />
+          <button type="submit" class="btn btn-light">SEARCH</button>
+        </form>
+        <div class="dancer-search-results" id="searchResults"></div>
+      </div>
+    </section>
+
+    <section class="section" id="patronBookings" hidden>
+      <div class="container">
+        <h2 class="display">YOUR BOOKING REQUESTS</h2>
+        <div id="patronBookingList" class="booking-list"></div>
+      </div>
+    </section>
+
+    <!-- Dancer view -->
+    <section class="section role-view" id="dancerView" hidden>
+      <div class="container">
+        <h2 class="display">MANAGE YOUR DANCER PROFILE</h2>
+        <p class="muted">Build a public profile, manage availability, and respond to bookings.</p>
+
+        <div class="dash-grid">
+          <a class="dash-card" href="edit-profile.html"><span class="feature-icon" aria-hidden="true">&#9999;</span><h3>EDIT PUBLIC PROFILE</h3><p>Stage name, bio, services, offerings, availability, and venues.</p></a>
+          <button type="button" class="dash-card" id="copyDancerLink"><span class="feature-icon" aria-hidden="true">&#128279;</span><h3>COPY PROFILE LINK</h3><p id="dancerSlugLine">Share your bookable profile anywhere.</p></button>
+          <button type="button" class="dash-card" id="toggleDancerPublic"><span class="feature-icon" aria-hidden="true">&#128274;</span><h3 id="visibilityHeading">PUBLIC: OFF</h3><p id="visibilityNote">Toggle whether your profile is publicly bookable.</p></button>
+        </div>
+
+        <h3 class="display" style="margin-top:48px;">PROFILE COMPLETENESS</h3>
+        <ul id="dancerChecklist" class="checklist dashboard-checklist"></ul>
+      </div>
+    </section>
+
+    <section class="section" id="dancerBookings" hidden>
+      <div class="container">
+        <h2 class="display">INBOUND BOOKING REQUESTS</h2>
+        <div id="dancerBookingList" class="booking-list"></div>
+      </div>
+    </section>
+
+    <!-- Owner view -->
+    <section class="section role-view" id="ownerView" hidden>
+      <div class="container">
+        <h2 class="display">MANAGE YOUR VENUE</h2>
+        <p class="muted">Update your venue details, plan, and reach out to our team.</p>
+
+        <div class="info-grid" id="ownerInfo"></div>
+
+        <div class="dash-grid">
+          <a class="dash-card" href="edit-profile.html"><span class="feature-icon" aria-hidden="true">&#9999;</span><h3>EDIT VENUE PROFILE</h3><p>Update your business address, contact, and inquiry message.</p></a>
+          <a class="dash-card" href="pricing.html"><span class="feature-icon" aria-hidden="true">&#128202;</span><h3>VIEW PRICING</h3><p>Compare plans or change your selection.</p></a>
+          <a class="dash-card" href="payment-processing.html"><span class="feature-icon" aria-hidden="true">&#128176;</span><h3>EXPLORE PAYMENT PROCESSING</h3><p>Planned feature &mdash; not live yet.</p></a>
+          <a class="dash-card" href="for-club-owners.html#owner-inquiry"><span class="feature-icon" aria-hidden="true">&#128172;</span><h3>SUBMIT INQUIRY</h3><p>Send a question to our team.</p></a>
+        </div>
+
+        <p class="muted small">Coming next: events, roster, patron metrics, and booking insights.</p>
+      </div>
+    </section>
+
+    <section class="section center" id="dashFallback" hidden>
+      <div class="container narrow">
+        <h2 class="display">WE COULDN'T LOAD YOUR PROFILE</h2>
+        <p class="muted">If you just signed up, please refresh in a moment. Otherwise log out and try again.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="foot-col"><h4>COMPANY</h4><ul><li><a href="about.html">About Us</a></li><li><a href="blog.html">Blog</a></li><li><a href="store.html">Store</a></li><li><a href="brand-ambassador.html">Brand Ambassador</a></li></ul></div>
+      <div class="foot-col"><h4>FEATURES</h4><ul><li><a href="for-dancers.html">For Dancers</a></li><li><a href="for-club-owners.html">For Club Owners</a></li><li><a href="for-patrons.html">For Patrons</a></li><li><a href="dancers.html">Meet the Roster</a></li><li><a href="payment-processing.html">Payment Processing</a></li><li><a href="pricing.html">Pricing</a></li></ul></div>
+      <div class="foot-col"><h4>RESOURCES</h4><ul><li><a href="help.html">Help Center</a></li><li><a href="locations.html">Locations</a></li><li><a href="download.html">Download</a></li><li><a href="terms.html">Terms of Service</a></li><li><a href="privacy.html">Privacy Policy</a></li></ul></div>
+      <div class="foot-brand">
+        <a href="index.html" class="foot-brand-link" aria-label="xxxotic home"><span class="brand-mark xl">xxx<em>otic</em></span></a>
+        <p class="foot-dl">DOWNLOAD TODAY</p>
+        <div class="store-row">
+          <a href="download.html" class="store-btn" data-store="ios"><span>Download on the</span><strong>App Store</strong></a>
+          <a href="download.html" class="store-btn" data-store="android"><span>Get it on</span><strong>Google Play</strong></a>
+        </div>
+      </div>
+    </div>
+    <div class="container foot-bottom">
+      <p>&copy; <span id="currentYear"></span> xxxotic Inc.</p>
+      <div class="foot-legal"><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a></div>
+      <div class="socials" aria-label="Social media">
+        <a href="#" aria-label="YouTube (coming soon)" data-social="youtube"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8ZM9.6 15.6V8.4L15.9 12l-6.3 3.6Z" /></svg></a>
+        <a href="#" aria-label="X (coming soon)" data-social="x"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.2 2h3.4l-7.5 8.6L23 22h-7l-5.5-7.2L4.2 22H.8l8-9.2L.2 2h7.2l5 6.7L18.2 2Zm-1.2 18h1.9L6.4 3.9h-2L17 20Z" /></svg></a>
+        <a href="#" aria-label="Facebook (coming soon)" data-social="facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 8.4V6.6c0-.9.6-1.1 1-1.1h2.6V1.1L14 1c-4 0-5 3-5 4.9v2.5H5.8V13H9v10h5V13h3.5l.5-4.6H14Z" /></svg></a>
+        <a href="#" aria-label="Instagram (coming soon)" data-social="instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.2 2h9.6A5.2 5.2 0 0 1 22 7.2v9.6a5.2 5.2 0 0 1-5.2 5.2H7.2A5.2 5.2 0 0 1 2 16.8V7.2A5.2 5.2 0 0 1 7.2 2Zm0 2A3.2 3.2 0 0 0 4 7.2v9.6A3.2 3.2 0 0 0 7.2 20h9.6a3.2 3.2 0 0 0 3.2-3.2V7.2A3.2 3.2 0 0 0 16.8 4H7.2Zm9.7 2.6a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6ZM12 7.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8Zm0 2a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Z" /></svg></a>
+        <a href="#" aria-label="TikTok (coming soon)" data-social="tiktok"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.2 2c.4 3 2.1 4.8 4.8 5v4a8.5 8.5 0 0 1-4.7-1.4v6.4c0 4.1-2.5 6.8-6.4 6.8A6.4 6.4 0 0 1 3.5 16c0-3.8 3-6.6 6.8-6.3v4a2.5 2.5 0 0 0-2.8 2.4 2.4 2.4 0 0 0 2.5 2.5c1.5 0 2.4-1 2.4-2.7V2h3.8Z" /></svg></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var auth = window.xxxoticAuth, api = window.xxxoticApi;
+    var $ = function (id) { return document.getElementById(id); };
+
+    if (!auth || !auth.isConfigured()) {
+      auth && auth.renderConfigBanner("dashboardMain");
+      $("dashTitle").textContent = "DASHBOARD";
+      $("dashGreeting").textContent = "Backend not configured. Wire Supabase in js/config.js to view your account.";
+      $("logoutBtn").disabled = true;
+      return;
+    }
+
+    var logoutBtn = $("logoutBtn");
+    if (logoutBtn) logoutBtn.addEventListener("click", async function () {
+      await auth.signOut();
+      window.location.href = "index.html";
+    });
+
+    function escapeHtml(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function fmtStatus(status) {
+      var map = { pending: "Pending", accepted: "Accepted", declined: "Declined", cancelled: "Cancelled", completed: "Completed" };
+      return map[status] || status;
+    }
+
+    function bookingsToHtml(rows, viewerRole) {
+      if (!rows || !rows.length) return '<p class="muted">No booking requests yet.</p>';
+      return rows.map(function (b) {
+        var who = viewerRole === "dancer"
+          ? (b.patron ? escapeHtml((b.patron.first_name || "") + " " + (b.patron.last_name || "")) : "Patron")
+          : (b.dancer ? escapeHtml(b.dancer.stage_name || b.dancer.slug || "Dancer") : "Dancer");
+        var actions = "";
+        if (viewerRole === "dancer" && b.status === "pending") {
+          actions =
+            '<div class="booking-actions">' +
+            '  <button class="btn btn-light" data-booking-action="accepted" data-booking-id="' + escapeHtml(b.id) + '">ACCEPT</button>' +
+            '  <button class="btn btn-outline" data-booking-action="declined" data-booking-id="' + escapeHtml(b.id) + '">DECLINE</button>' +
+            "</div>";
+        }
+        return (
+          '<article class="booking-row">' +
+          '<header><strong>' + who + '</strong><span class="booking-status booking-status-' + escapeHtml(b.status) + '">' + escapeHtml(fmtStatus(b.status)) + '</span></header>' +
+          '<p class="muted small">' + escapeHtml(b.requested_date || "Date TBD") + " &middot; " + escapeHtml(b.requested_time || "Time TBD") + " &middot; party of " + escapeHtml(b.party_size || 1) + "</p>" +
+          (b.message ? '<p>' + escapeHtml(b.message) + '</p>' : "") +
+          actions +
+          '</article>'
+        );
+      }).join("");
+    }
+
+    async function renderPatron(profile) {
+      $("patronView").hidden = false;
+      $("patronSearch").hidden = false;
+      $("patronBookings").hidden = false;
+      $("dashTitle").textContent = "PLAN YOUR NIGHT OUT";
+      $("dashGreeting").textContent = "Welcome back, " + (profile.first_name || "patron") + ".";
+      $("roleBadge").textContent = "PATRON";
+      $("roleBadge").className = "role-badge role-badge-pink";
+
+      var bookings = await api.listBookingsForPatron(profile.id);
+      $("patronBookingList").innerHTML = bookingsToHtml(bookings.data, "patron");
+
+      var form = $("patronSearchForm");
+      var resultsBox = $("searchResults");
+      async function runSearch(q) {
+        resultsBox.innerHTML = '<p class="muted">Searching&hellip;</p>';
+        var res = await api.searchDancers(q);
+        if (res.error) { resultsBox.innerHTML = '<p class="muted">Search failed.</p>'; return; }
+        if (!res.data || !res.data.length) { resultsBox.innerHTML = '<p class="muted">No public dancers matched that search.</p>'; return; }
+        resultsBox.innerHTML = res.data.map(function (d) {
+          return (
+            '<a class="dash-card" href="dancer-profile.html?slug=' + encodeURIComponent(d.slug) + '">' +
+            '<h3>' + escapeHtml(d.stage_name || d.slug) + '</h3>' +
+            '<p class="muted small">' + escapeHtml((d.city || "") + (d.state ? ", " + d.state : "")) + '</p>' +
+            '<p>' + escapeHtml((d.services || []).slice(0, 3).join(" &middot; ")) + '</p>' +
+            '</a>'
+          );
+        }).join("");
+      }
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        runSearch(document.getElementById("patronQuery").value);
+      });
+      runSearch("");
+    }
+
+    async function renderDancer(profile) {
+      $("dancerView").hidden = false;
+      $("dancerBookings").hidden = false;
+      $("dashTitle").textContent = "MANAGE YOUR DANCER PROFILE";
+      $("dashGreeting").textContent = "Welcome back, " + (profile.first_name || "dancer") + ".";
+      $("roleBadge").textContent = "DANCER";
+      $("roleBadge").className = "role-badge role-badge-green";
+
+      var dancerRes = await api.getDancerProfileById(profile.id);
+      var dancer = dancerRes.data;
+
+      // Slug & profile link
+      var slug = dancer && dancer.slug ? dancer.slug : "";
+      var publicLink = slug ? (window.location.origin + window.location.pathname.replace(/dashboard\.html.*$/, "") + "dancer-profile.html?slug=" + encodeURIComponent(slug)) : "";
+      if (publicLink) $("dancerSlugLine").textContent = publicLink;
+
+      $("copyDancerLink").addEventListener("click", async function () {
+        if (!publicLink) return;
+        try {
+          if (navigator.clipboard) await navigator.clipboard.writeText(publicLink);
+          else {
+            var ta = document.createElement("textarea");
+            ta.value = publicLink; document.body.appendChild(ta); ta.select();
+            document.execCommand("copy"); document.body.removeChild(ta);
+          }
+          $("copyDancerLink").querySelector("h3").textContent = "COPIED!";
+          window.setTimeout(function () { $("copyDancerLink").querySelector("h3").textContent = "COPY PROFILE LINK"; }, 1500);
+        } catch (_) { /* ignore */ }
+      });
+
+      // Visibility toggle
+      function paintVisibility(isPublic) {
+        $("visibilityHeading").textContent = "PUBLIC: " + (isPublic ? "ON" : "OFF");
+        $("visibilityNote").textContent = isPublic
+          ? "Your profile is public and bookable. Tap to make it private."
+          : "Your profile is private. Tap to publish it.";
+      }
+      paintVisibility(!!(dancer && dancer.is_public));
+      $("toggleDancerPublic").addEventListener("click", async function () {
+        var current = !!(dancer && dancer.is_public);
+        var res = await api.updateDancerProfile(profile.id, { is_public: !current });
+        if (!res.error && res.data) { dancer = res.data; paintVisibility(!!dancer.is_public); }
+      });
+
+      // Profile completeness
+      var checks = [
+        { label: "Stage name set", ok: !!(dancer && dancer.stage_name) },
+        { label: "Bio added", ok: !!(dancer && dancer.bio) },
+        { label: "City / state set", ok: !!(dancer && (dancer.city || dancer.state)) },
+        { label: "Services added", ok: !!(dancer && dancer.services && dancer.services.length) },
+        { label: "Offerings added", ok: !!(dancer && dancer.offerings && dancer.offerings.length) },
+        { label: "Profile public", ok: !!(dancer && dancer.is_public) }
+      ];
+      $("dancerChecklist").innerHTML = checks.map(function (c) {
+        return '<li><span class="dot ' + (c.ok ? "dot-green" : "dot-muted") + '" aria-hidden="true"></span>' + escapeHtml(c.label) + '</li>';
+      }).join("");
+
+      // Inbound bookings
+      var bookings = await api.listBookingsForDancer(profile.id);
+      $("dancerBookingList").innerHTML = bookingsToHtml(bookings.data, "dancer");
+      $("dancerBookingList").addEventListener("click", async function (e) {
+        var btn = e.target.closest("[data-booking-id]");
+        if (!btn) return;
+        var status = btn.dataset.bookingAction;
+        var id = btn.dataset.bookingId;
+        btn.disabled = true;
+        await api.updateBookingStatus(id, status);
+        var refreshed = await api.listBookingsForDancer(profile.id);
+        $("dancerBookingList").innerHTML = bookingsToHtml(refreshed.data, "dancer");
+      });
+    }
+
+    async function renderOwner(profile) {
+      $("ownerView").hidden = false;
+      $("dashTitle").textContent = "MANAGE YOUR VENUE";
+      $("dashGreeting").textContent = "Welcome back, " + (profile.first_name || "owner") + ".";
+      $("roleBadge").textContent = "CLUB OWNER";
+      $("roleBadge").className = "role-badge role-badge-purple";
+
+      var ownerRes = await api.getOwnerProfile(profile.id);
+      var o = ownerRes.data || {};
+      var planLabel = { starter: "Starter ($99/mo)", growth: "Growth ($249/mo)", premium: "Premium ($499/mo)" }[o.selected_plan] || "Not selected";
+
+      $("ownerInfo").innerHTML = [
+        ["Club / lounge", o.club_name],
+        ["Business address", o.business_address],
+        ["Business phone", o.business_phone],
+        ["Business email", o.business_email],
+        ["Website / Instagram", o.website_or_instagram || "—"],
+        ["Selected plan", planLabel]
+      ].map(function (kv) {
+        return '<div class="info-cell"><span class="info-key">' + escapeHtml(kv[0]) + '</span><span class="info-val">' + escapeHtml(kv[1] || "—") + '</span></div>';
+      }).join("");
+    }
+
+    (async function () {
+      var user = await auth.requireSession("login.html");
+      if (!user) return;
+      var profileRes = await api.getProfile(user.id);
+      if (profileRes.error || !profileRes.data) {
+        $("dashFallback").hidden = false;
+        return;
+      }
+      var profile = profileRes.data;
+      if (profile.role === "patron") return renderPatron(profile);
+      if (profile.role === "dancer") return renderDancer(profile);
+      if (profile.role === "owner") return renderOwner(profile);
+      $("dashFallback").hidden = false;
+    })();
+  })();
+  </script>
+</body>
+</html>
